@@ -95,7 +95,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   var BASE='img/';
   // el inicio invita con murmurar; después cada lente dice cómo lo cruzamos. El inicio sólo sale una vez.
   // invita, pregunta, responde con el dato, conecta, y después pasan los lentes. Abajo se encienden los que miran cada diapositiva
-  var LENTES=['naturaleza','ciencia','botánica','psicología','neurociencia','educación','espiritualidad','chamanismo','masculinidad'];
+  var LENTES=['naturaleza','ciencia','botánica','psicología','neurociencia','educación','espiritualidad','chamanismo','astrología','masculinidad'];
   var L=[
     {lente:'microsteps', tit:'Algo se está <b>murmurando.</b>', sub:'Toca aquí.', mira:[], foto:'drive-6524', voz:'susurro', forma:'libre', to:.15, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#E6F8C8']},
     {lente:'una pregunta', tit:'¿Cómo se llama cuando miles de aves <b>dibujan formas en el cielo?</b>', sub:'Se mueven juntas, en patrones que cambian, y nadie las dirige.', mira:['naturaleza'], foto:'drive-5245', voz:'susurro', forma:'espiral', to:.35, tinte:'#3A3F9A', f:['#070C24','#1A2A6A'], p:['#A9B8F0','#EEF1FF']},
@@ -107,8 +107,9 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     {lente:'el lente de la neurociencia', tit:'Las neuronas también <b>murmuran.</b>', sub:'Una se activa y enciende a sus vecinas, en cascadas que la ciencia llama avalanchas neuronales.', fuente:'Beggs y Plenz, 2003 · Journal of Neuroscience', mira:['neurociencia','ciencia'], foto:'mimosa-flor', voz:'voz', forma:'libre', to:.15, tinte:'#1E4FA8', f:['#050B1C','#0E2350'], p:['#8DBDE6','#F5D98B']},
     {lente:'el lente de la educación', tit:'La ciencia también <b>se murmura.</b>', sub:'Lo que sabemos, dicho claro y con su fuente, de persona en persona.', mira:['educación'], foto:'musgo-gotas', voz:'masa', forma:'espiral', to:.15, tinte:'#1E4FA8', f:['#050B1C','#0E2350'], p:['#8DBDE6','#F5D98B']},
     {lente:'el lente de la espiritualidad', tit:'Quien ve a todos los seres en sí mismo <b>y a sí mismo en todos los seres.</b>', sub:'Hace casi tres mil años ya se decía así: todo está conectado.', fuente:'Isha Upanishad, verso 6', mira:['espiritualidad'], foto:'racimo-rosa', voz:'red', forma:'circulo', to:.35, tinte:'#5A3A20', f:['#120A04','#3A2410'], p:['#E8C27A','#FFF1CF']},
-    {lente:'el lente del chamanismo', tit:'Muchas culturas lo dicen <b>desde antes.</b>', sub:'Que todo está conectado no lo descubrió la ciencia. Los shipibo-konibo, los mazatecos y muchas otras culturas lo dicen desde hace siglos. Lo escuchamos con respeto.', fuente:'tradiciones shipibo-konibo y mazateca', mira:['chamanismo'], foto:'drive-4183', voz:'red', forma:'espiral', to:.55, tinte:'#4A2A7A', f:['#0A0718','#2A1A4A'], p:['#E8C27A','#FFF1CF']},
+    {lente:'el lente del chamanismo', tit:'Muchas culturas también <b>lo nombran.</b>', sub:'Los shipibo-konibo, los mazatecos y muchas otras culturas hablan de esta conexión desde hace siglos. Nadie es más que nadie: en esta mesa sólo observamos, con respeto.', fuente:'tradiciones shipibo-konibo y mazateca', mira:['chamanismo'], foto:'drive-4183', voz:'red', forma:'espiral', to:.55, tinte:'#4A2A7A', f:['#0A0718','#2A1A4A'], p:['#E8C27A','#FFF1CF']},
     {lente:'una combinación de lentes', tit:'Jacobo Grinberg lo llamó <b>sintergia.</b>', sub:'Su teoría propone que la conciencia y el espacio forman un mismo campo: todo está conectado.', fuente:'Jacobo Grinberg · UNAM · teoría sintérgica', mira:['neurociencia','ciencia','chamanismo','espiritualidad'], foto:'salvia-azul-a', voz:'vectores', forma:'circulo', to:.4, tinte:'#3A3F9A', f:['#070C24','#1A2A6A'], p:['#A9B8F0','#EEF1FF']},
+    {lente:'el lente de la astrología', tit:'Venus dibuja <b>una flor en el cielo.</b>', sub:'Vista desde la Tierra, cada ocho años traza cinco pétalos. Los mayas la siguieron con cuidado. En astrología lo que importa no es cada planeta: es cómo se relacionan.', fuente:'ciclo de Venus · Códice de Dresde, tabla de Venus', mira:['astrología','ciencia'], foto:'cielo-24', voz:'venus', forma:'circulo', to:.1, tinte:'#1A2450', f:['#02040C','#0B1430'], p:['#DDE6FF','#FFF4D8']},
     {lente:'el lente de la masculinidad', tit:'Ni alfa ni beta. <b>En la parvada nadie manda.</b>', sub:'El «lobo alfa» salió de lobos en cautiverio. En libertad, la manada es una familia.', fuente:'Mech, 1999 · Canadian Journal of Zoology', mira:['masculinidad','ciencia'], foto:'drive-6525', voz:'turno', forma:'libre', to:.35, tinte:'#2A3A50', f:['#070B12','#1B2633'], p:['#B8C4D4','#FFFFFF']},
     {lente:'microsteps', tit:'Todos estamos <b>murmurando.</b>', sub:'Un tema, varios lentes. En cada uno decimos qué es dato y qué es visión. Murmura con nosotros.', mira:LENTES, foto:'drive-6524', voz:'masa', forma:'libre', to:.2, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#E6F8C8']}
   ];
@@ -170,6 +171,14 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
       if(this.forma==='espiral'){vx+=(-py/pd)*.06+px/pd*.012;vy+=(px/pd)*.06+py/pd*.012}
       else if(this.forma==='circulo'){var r0=Math.min(w,h)*.22,f=(pd-r0)*.0009;vx+=px/pd*f*6+(-py/pd)*.025;vy+=py/pd*f*6+(px/pd)*.025}
       else{vx+=px/pd*.006;vy+=py/pd*.006}
+      // venus: murmuran y luego se acomodan en la flor de cinco pétalos que Venus dibuja vista desde la Tierra (8 años)
+      if(voz==='venus'){var fase=(t%900)/900,peso=fase<.15?0:fase<.35?(fase-.15)/.2:fase<.85?1:(1-fase)/.15;
+        if(peso>0){peso=peso*peso*(3-2*peso);
+          // la trayectoria de Venus vista desde la Tierra en ocho años: cinco lazos, la rosa de Venus. Gira despacio.
+          var u=i/n*16*Math.PI,gi=t*.0006,ex=Math.cos(u),ey=Math.sin(u),vxv=.723*Math.cos(1.6255*u),vyv=.723*Math.sin(1.6255*u),R=Math.min(w,h)*.47/1.723;
+          var dx0=(vxv-ex)*R,dy0=(vyv-ey)*R,tx=w*.5+dx0*Math.cos(gi)-dy0*Math.sin(gi),ty=h*.5+dx0*Math.sin(gi)+dy0*Math.cos(gi);
+          var nx=x+vx*(1-peso)+(tx-x)*.07*peso,ny=y+vy*(1-peso)+(ty-y)*.07*peso;
+          this.vx[i]=(nx-x)||.01;this.vy[i]=(ny-y)||.01;this.x[i]=nx;this.y[i]=ny;continue}}
       var v=Math.sqrt(vx*vx+vy*vy)||1;
       if(v>vmax){vx=vx/v*vmax;vy=vy/v*vmax}else if(v<vmin){vx=vx/v*vmin;vy=vy/v*vmin}
       this.vx[i]=vx;this.vy[i]=vy;x+=vx;y+=vy;
@@ -199,6 +208,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
       if(voz==='susurro'){s=1+z[i]*1.6;a=(.38+.5*z[i])*(.85+.15*Math.sin(t*.03+i*1.7))}
       else if(voz==='voz'){var b=this.b[i];s=1.3+b*.9;a=.42+b*.5;if(b>.3)col=p[1]}
       else if(voz==='red'){s=1.1+z[i]*1.6;a=.5+.5*z[i]}
+      else if(voz==='venus'){s=.9+z[i]*.9;a=.55+.45*z[i];if(z[i]>.93)col=p[1]}
       else{s=.7+z[i]*1.9;a=.32+.6*z[i];if(z[i]>.9)col=p[1]}
       ctx.globalAlpha=(a)*K;ctx.fillStyle=col;ctx.fillRect(x[i]-s/2,y[i]-s/2,s,s);
     }
@@ -210,7 +220,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   };
   var escena=document.getElementById('escena'),fondo=document.getElementById('fondo'),tinte=document.getElementById('tinte'),sombra=document.getElementById('sombra');
   var cv=document.getElementById('cielo'),ctx=cv.getContext('2d'),frase=document.getElementById('frase'),pista=document.getElementById('pista');
-  var dpr=Math.min(2,devicePixelRatio||1),band,actual=-1,inicio=0,capas={},rnd=azar(Date.now()%99991+1),primera=true,fijo=false,cs=0,luz=document.getElementById('luz'),antes=null,mezcla=1,pAhora=null;
+  var dpr=Math.min(2,devicePixelRatio||1),band,actual=-1,inicio=0,capas={},rnd=azar(Date.now()%99991+1),primera=true,fijo=location.hash==='#quieto',cs=0,luz=document.getElementById('luz'),antes=null,mezcla=1,pAhora=null;
   L.forEach(function(l){if(!capas[l.foto]){var i=document.createElement('i');i.style.backgroundImage='url('+BASE+l.foto+'.jpg)';fondo.appendChild(i);capas[l.foto]=i}});
   function tamano(){var r=escena.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);band=new Bandada(Math.min(6000,Math.round(r.width*r.height/(r.width<760?330:210))),r.width,r.height,rnd);if(actual>=0){band.forma=L[actual].forma;band.voz=L[actual].voz}}
   function lente(k){
@@ -258,8 +268,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   // Notas sueltas, muy quedas, cuando una señal pasa de punto en punto.
   var sonido=(function(){
     var ac=null,maestro,salida,activo=false,raiz=220,acorde=[0,4,7,11],reloj=null,ultima=0,paso=0;
-    var RAIZ={susurro:220,masa:196,tu:246.94,voz:261.63,red:174.61,vectores:293.66,turno:207.65};
-    var ACORDE={susurro:[0,7,11,14],masa:[0,5,9,14],tu:[0,3,7,10],voz:[0,4,7,11],red:[0,3,7,8],vectores:[0,4,9,14],turno:[0,5,7,10]};
+    var RAIZ={venus:233.08,susurro:220,masa:196,tu:246.94,voz:261.63,red:174.61,vectores:293.66,turno:207.65};
+    var ACORDE={venus:[0,7,12,16],susurro:[0,7,11,14],masa:[0,5,9,14],tu:[0,3,7,10],voz:[0,4,7,11],red:[0,3,7,8],vectores:[0,4,9,14],turno:[0,5,7,10]};
     function arranca(){
       ac=new (window.AudioContext||window.webkitAudioContext)();
       maestro=ac.createGain();maestro.gain.value=0;
