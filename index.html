@@ -106,7 +106,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     {lente:'el lente de la neurociencia', tit:'Las neuronas también <b>murmuran.</b>', sub:'Una se activa y enciende a sus vecinas, en cascadas que la ciencia llama avalanchas neuronales.', fuente:'Beggs y Plenz, 2003 · Journal of Neuroscience', mira:['neurociencia','ciencia'], foto:'mimosa-flor', voz:'voz', forma:'libre', to:.15, tinte:'#1E4FA8', f:['#050B1C','#0E2350'], p:['#8DBDE6','#F5D98B']},
     {lente:'el lente de la educación', tit:'La ciencia también <b>se murmura.</b>', sub:'Lo que sabemos, dicho claro y con su fuente, de persona en persona.', mira:['educación'], foto:'musgo-gotas', voz:'masa', forma:'espiral', to:.15, tinte:'#1E4FA8', f:['#050B1C','#0E2350'], p:['#8DBDE6','#F5D98B']},
     {lente:'el lente de la espiritualidad', tit:'Quien ve a todos los seres en sí mismo <b>y a sí mismo en todos los seres.</b>', sub:'Hace casi tres mil años ya se decía así: todo está conectado.', fuente:'Isha Upanishad, verso 6', mira:['espiritualidad'], foto:'racimo-rosa', voz:'red', forma:'circulo', to:.35, tinte:'#5A3A20', f:['#120A04','#3A2410'], p:['#E8C27A','#FFF1CF']},
-    {lente:'el lente del chamanismo', tit:'Lo vivo se escucha <b>en conjunto.</b>', sub:'En la sierra mazateca, María Sabina lo sabía desde antes.', mira:['chamanismo'], foto:'drive-4183', voz:'red', forma:'espiral', to:.55, tinte:'#4A2A7A', f:['#0A0718','#2A1A4A'], p:['#E8C27A','#FFF1CF']},
+    {lente:'el lente del chamanismo', tit:'El lenguaje pertenece a los niños santos. <b>Ellos hablan y yo traduzco.</b>', sub:'Así lo contó María Sabina, sabia mazateca de Huautla.', fuente:'se atribuye a María Sabina · en Álvaro Estrada, Vida de María Sabina', mira:['chamanismo'], foto:'drive-4183', voz:'red', forma:'espiral', to:.55, tinte:'#4A2A7A', f:['#0A0718','#2A1A4A'], p:['#E8C27A','#FFF1CF']},
     {lente:'una combinación de lentes', tit:'Jacobo Grinberg lo llamó <b>sintergia.</b>', sub:'Su teoría propone que la conciencia y el espacio forman un mismo campo: todo está conectado.', fuente:'Jacobo Grinberg · teoría sintérgica', mira:['neurociencia','ciencia','chamanismo','espiritualidad'], foto:'salvia-azul-a', voz:'vectores', forma:'circulo', to:.4, tinte:'#3A3F9A', f:['#070C24','#1A2A6A'], p:['#A9B8F0','#EEF1FF']},
     {lente:'el lente de la masculinidad', tit:'Ni alfa ni beta. <b>En la parvada nadie manda.</b>', sub:'El «lobo alfa» salió de lobos en cautiverio. En libertad, la manada es una familia.', fuente:'Mech, 1999 · Canadian Journal of Zoology', mira:['masculinidad','ciencia'], foto:'drive-6525', voz:'turno', forma:'libre', to:.35, tinte:'#2A3A50', f:['#070B12','#1B2633'], p:['#B8C4D4','#FFFFFF']},
     {lente:'microsteps', tit:'Todos estamos <b>murmurando.</b>', sub:'Un tema, varios lentes. En cada uno decimos qué es dato y qué es visión. Murmura con nosotros.', mira:LENTES, foto:'drive-6524', voz:'masa', forma:'libre', to:.2, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#E6F8C8']}
@@ -217,8 +217,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     Object.keys(capas).forEach(function(f){capas[f].classList.toggle('on',f===l.foto)});
     if(pAhora&&band.voz!==l.voz){antes={voz:band.voz,p:pAhora};mezcla=0}
     // la rueda: pasan de uno en uno los lentes que miran esta diapositiva
-    // todos: pasan los lentes uno a uno; uno solo: alterna con «10,000 lentes», para que nunca se repita la misma palabra
-    rueda.cambia(l.mira===LENTES?['10,000 lentes'].concat(LENTES):l.mira.length>1?l.mira:[l.mira[0]||'microsteps','10,000 lentes']);
+    // los lentes de esta diapositiva; si miran todos, «10,000 lentes»
+    rueda.cambia(l.mira===LENTES?['10,000 lentes']:(l.mira.length?l.mira.slice():['microsteps']));
     sonido.lente(l);
     var capa=sombra.children[cs=1-cs];capa.style.background='radial-gradient(55% 42% at 50% 50%,'+hexA(l.f[0],.78)+',transparent 100%),radial-gradient(80% 80% at 50% 50%,'+hexA(l.f[0],.3)+' 0%,'+hexA(l.f[0],.88)+' 100%),linear-gradient(180deg,'+hexA(l.f[0],.35)+',transparent 30%,transparent 60%,'+hexA(l.f[0],.6)+')';
     sombra.children[cs].classList.add('on');sombra.children[1-cs].classList.remove('on');
@@ -232,26 +232,25 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     },primera?400:1700);
     primera=false;
   }
-  // la rueda: carrusel infinito a un solo ritmo, sin regresar. Sube un renglón cada 2.2 s;
-  // debajo se ven los que vienen, tomados de los lentes de la diapositiva actual.
+  // la rueda: sube sólo cuando cambia el lente y se queda quieta en él. Si la diapositiva mira con varios,
+  // pasan una sola vez, a un ritmo fijo, y se detiene en el último. Debajo se ve el que viene.
   var rueda=(function(){
-    var RITMO=2200,cola=['microsteps','10,000 lentes'],qi=0,a=0;
-    function sig(){var n=cola[qi%cola.length];qi++;return n}
+    var RITMO=2600,a=2,cola=[],reloj=null;
     function nuevo(n){var d=document.createElement('div');d.textContent=n;pista.appendChild(d);return d}
     function pon(suave){var h=pista.firstChild.offsetHeight;if(!suave)pista.style.transition='none';pista.style.transform='translateY('+((2-a)*h)+'px)';if(!suave){pista.offsetHeight;pista.style.transition=''}
       [].forEach.call(pista.children,function(c,i){c.classList.toggle('on',i===a)})}
-    function llena(){while(pista.children.length<a+4)nuevo(sig())}
-    // primero se quita lo de arriba sin moverse (no se ve) y en el siguiente cuadro sube un renglón suave: nunca brinca
-    function paso(){
+    // lo que está debajo del iluminado es lo que falta por pasar
+    function debajo(){while(pista.children.length>a+1)pista.removeChild(pista.lastChild);cola.forEach(nuevo);nuevo('');nuevo('')}
+    function sube(){
+      if(!cola.length){clearInterval(reloj);reloj=null;return}
       if(a>6){pista.removeChild(pista.firstChild);a--;pon(false)}
-      requestAnimationFrame(function(){a++;llena();pon(true)});
+      requestAnimationFrame(function(){cola.shift();a++;pon(true)});
     }
-    for(var q=0;q<2;q++)nuevo('');nuevo(sig());a=2;llena();pon(false);setInterval(paso,RITMO);
+    nuevo('');nuevo('');nuevo('microsteps');nuevo('');nuevo('');pon(false);
     return {cambia:function(c){
-      // lo que viene debajo se reescribe con los lentes nuevos; lo que ya pasó no se toca
-      // el que ya se ve abajo se queda; los demás se reescriben con los lentes nuevos
-      cola=c;qi=c.indexOf(pista.children[a+1]&&pista.children[a+1].textContent)+1;while(pista.children.length>a+2)pista.removeChild(pista.lastChild);llena();
-      [].forEach.call(pista.children,function(c,i){c.classList.toggle('on',i===a)});
+      var ya=pista.children[a].textContent;cola=c.filter(function(n,i){return !(i===0&&n===ya)});
+      debajo();clearInterval(reloj);reloj=null;
+      if(cola.length){setTimeout(sube,900);reloj=setInterval(sube,RITMO)}
     }};
   })();
   // sonido: un piano que respira. Un acorde lento entra y sale cada ~8 s, en loop; cada lente cambia el acorde.
