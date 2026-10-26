@@ -50,10 +50,10 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 .lema b{display:block;font-weight:400;color:var(--tinta)}
 /* abajo a la izquierda: la rueda de lentes (como el selector de la alarma), una línea y el lema */
 .pieizq{width:max-content;position:absolute;left:max(24px,env(safe-area-inset-left,0px));bottom:max(40px,env(safe-area-inset-bottom,0px))}
-.pieizq .lema{position:static;display:block;padding-top:12px}
-.pieizq .linea+.rueda+.linea{margin:0 0 0 1.5px}
+.pieizq .lema{position:static;display:block;padding-top:20px}
+.pieizq .linea+.rueda+.linea{margin:-7px 0 0 1.5px}
 /* las líneas arrancan donde arranca la tinta de las letras (Helvetica y Courier dejan ~1.5 px de aire a la izquierda) */
-.linea{display:block;border-top:1px solid rgba(238,242,248,.45);margin:0 0 0 1.5px}
+.linea{display:block;position:relative;border-top:1px solid rgba(238,242,248,.45);margin:0 0 -7px 1.5px}
 /* la rueda: cinco renglones; el del centro es el iluminado, arriba y abajo se desvanecen igual */
 .rueda{height:130px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent)}
 .pista{transition:transform 1.4s cubic-bezier(.45,0,.25,1)}
@@ -101,7 +101,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     {lente:'desde la naturaleza y la ciencia', tit:'<b>Murmuración.</b>', sub:'Cada estornino sigue sólo a sus seis o siete vecinos más cercanos, estén a la distancia que estén. Con eso basta para que la parvada no se rompa.', fuente:'Ballerini y otros, PNAS 2008 · estorninos en Roma', mira:['naturaleza','ciencia'], foto:'repisas-musgo-a', voz:'masa', forma:'libre', to:.2, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#E6F8C8']},
     {lente:'el lente de la botánica', tit:'Los hongos también <b>murmuran.</b>', sub:'Bajo el bosque, el micelio une las raíces de muchos árboles y por ahí pasa alimento de uno a otro.', fuente:'Simard y otros, 1997 · Nature', mira:['botánica','ciencia'], foto:'repisas-musgo-b', voz:'red', forma:'libre', to:.25, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#C9E08A','#F2FAD8']},
     {lente:'el lente de la botánica', tit:'La mimosa cierra sus hojas <b>una tras otra.</b>', sub:'Tocas una y la señal viaja por el tallo: las demás se cierran. Jagadish Chandra Bose lo registró hace un siglo y lo llamó el sistema nervioso de las plantas.', fuente:'J. C. Bose · The Nervous Mechanism of Plants, 1926', mira:['botánica','ciencia'], foto:'mimosa-hojas', voz:'voz', forma:'libre', to:.2, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#F5D98B']},
-    {lente:'microsteps', tit:'Todo está conectado: <b>se mueve uno, se mueven todos.</b>', sub:'Y así podemos observar las cosas.', mira:LENTES, foto:'drive-4908', voz:'masa', forma:'espiral', to:.25, tinte:'#1F4A3A', f:['#03100C','#12352A'], p:['#A9D4B8','#EAF8EE']},
+    {lente:'microsteps', tit:'Todo está conectado: <b>se mueve uno, se mueven todos.</b>', sub:'Y así podemos observar las cosas.', fuente:'Mitákuye Oyás’iŋ · «todos estamos relacionados», lakota', mira:LENTES, foto:'drive-4908', voz:'masa', forma:'espiral', to:.25, tinte:'#1F4A3A', f:['#03100C','#12352A'], p:['#A9D4B8','#EAF8EE']},
     {lente:'el lente de la psicología', tit:'¿Me muevo yo, <b>o se mueve el sistema?</b>', sub:'Jung lo llamó inconsciente colectivo: imágenes y patrones que compartimos sin habernos puesto de acuerdo.', fuente:'Carl G. Jung · Los arquetipos y lo inconsciente colectivo', mira:['psicología'], foto:'salvia-azul-b', voz:'tu', forma:'espiral', to:.45, tinte:'#5A2E9A', f:['#0C0820','#2E1A5C'], p:['#C3A8EC','#F4ECFF']},
     {lente:'el lente de la neurociencia', tit:'Las neuronas también <b>murmuran.</b>', sub:'Una se activa y enciende a sus vecinas, en cascadas que la ciencia llama avalanchas neuronales.', fuente:'Beggs y Plenz, 2003 · Journal of Neuroscience', mira:['neurociencia','ciencia'], foto:'mimosa-flor', voz:'voz', forma:'libre', to:.15, tinte:'#1E4FA8', f:['#050B1C','#0E2350'], p:['#8DBDE6','#F5D98B']},
     {lente:'el lente de la educación', tit:'La ciencia también <b>se murmura.</b>', sub:'Lo que sabemos, dicho claro y con su fuente, de persona en persona.', mira:['educación'], foto:'musgo-gotas', voz:'masa', forma:'espiral', to:.15, tinte:'#1E4FA8', f:['#050B1C','#0E2350'], p:['#8DBDE6','#F5D98B']},
@@ -235,7 +235,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   // la rueda: carrusel infinito a un solo ritmo, sin regresar. Sube un renglón cada 2.2 s;
   // debajo se ven los que vienen, tomados de los lentes de la diapositiva actual.
   var rueda=(function(){
-    var RITMO=2200,cola=['microsteps'],qi=0,a=0;
+    var RITMO=2200,cola=['microsteps','10,000 lentes'],qi=0,a=0;
     function sig(){var n=cola[qi%cola.length];qi++;return n}
     function nuevo(n){var d=document.createElement('div');d.textContent=n;pista.appendChild(d);return d}
     function pon(suave){var h=pista.firstChild.offsetHeight;if(!suave)pista.style.transition='none';pista.style.transform='translateY('+((2-a)*h)+'px)';if(!suave){pista.offsetHeight;pista.style.transition=''}
@@ -246,11 +246,11 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
       if(a>6){pista.removeChild(pista.firstChild);a--;pon(false)}
       requestAnimationFrame(function(){a++;llena();pon(true)});
     }
-    for(var q=0;q<2;q++)nuevo('');nuevo('microsteps');a=2;llena();pon(false);setInterval(paso,RITMO);
+    for(var q=0;q<2;q++)nuevo('');nuevo(sig());a=2;llena();pon(false);setInterval(paso,RITMO);
     return {cambia:function(c){
       // lo que viene debajo se reescribe con los lentes nuevos; lo que ya pasó no se toca
       // el que ya se ve abajo se queda; los demás se reescriben con los lentes nuevos
-      cola=c;qi=0;while(pista.children.length>a+2)pista.removeChild(pista.lastChild);llena();
+      cola=c;qi=c.indexOf(pista.children[a+1]&&pista.children[a+1].textContent)+1;while(pista.children.length>a+2)pista.removeChild(pista.lastChild);llena();
       [].forEach.call(pista.children,function(c,i){c.classList.toggle('on',i===a)});
     }};
   })();
