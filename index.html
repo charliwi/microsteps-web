@@ -52,9 +52,9 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 .pieizq{position:absolute;left:max(24px,env(safe-area-inset-left,0px));bottom:max(40px,env(safe-area-inset-bottom,0px))}
 .pieizq .lema{position:static;display:block;border-top:1px solid rgba(238,242,248,.45);padding-top:12px;margin-top:8px}
 .linea{display:block;border-top:1px solid rgba(238,242,248,.45);margin-bottom:6px}
-.rueda{height:104px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 22%,#000 55%,transparent);mask-image:linear-gradient(transparent,#000 22%,#000 55%,transparent)}
+.rueda{height:120px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 22%,#000 55%,transparent);mask-image:linear-gradient(transparent,#000 22%,#000 55%,transparent)}
 .pista{transition:transform 1.1s cubic-bezier(.22,.8,.2,1)}
-.pista div{height:26px;line-height:26px;font-family:"Courier Prime","Courier New",ui-monospace,monospace;font-size:18px;color:rgba(255,255,255,.35);transition:color 1.1s ease;white-space:nowrap}
+.pista div{height:30px;line-height:30px;font-family:"Courier Prime","Courier New",ui-monospace,monospace;font-size:21px;color:rgba(255,255,255,.35);transition:color 1.1s ease;white-space:nowrap}
 .pista div.on{color:#fff}
 .sonido{position:absolute;top:max(22px,env(safe-area-inset-top,0px));right:max(20px,env(safe-area-inset-right,0px));background:none;border:0;padding:4px;color:rgba(255,255,255,.8);cursor:pointer;line-height:0}
 .sonido .tache{display:none}.sonido.apagado .ondas{display:none}.sonido.apagado .tache{display:inline}
@@ -67,7 +67,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 .frase .fuente{font-family:"Courier Prime","Courier New",ui-monospace,monospace;font-size:11px;letter-spacing:.04em;text-transform:none;margin-top:16px;font-size:13px;color:rgba(255,255,255,.88)}
 .frase p.sub{max-width:520px;margin-left:auto;margin-right:auto}
 /* los lentes que miran cada diapositiva se encienden */
-@media (max-width:760px){.lema{font-size:26px!important}.rueda{height:88px}.pista div{height:22px;line-height:22px;font-size:15px}
+@media (max-width:760px){.lema{font-size:26px!important}.rueda{height:100px}.pista div{height:25px;line-height:25px;font-size:17px}
   .frase h1{font-size:34px}.frase p{font-size:15px}}
 @media (prefers-reduced-motion:reduce){.fondo i,.tinte,.frase>*{transition:opacity .3s}}
 </style>
@@ -204,7 +204,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     ctx.globalAlpha=(1)*K;
   };
   var escena=document.getElementById('escena'),fondo=document.getElementById('fondo'),tinte=document.getElementById('tinte'),sombra=document.getElementById('sombra');
-  var cv=document.getElementById('cielo'),ctx=cv.getContext('2d'),frase=document.getElementById('frase'),pista=document.getElementById('pista'),giros=[];
+  var cv=document.getElementById('cielo'),ctx=cv.getContext('2d'),frase=document.getElementById('frase'),pista=document.getElementById('pista');
   var dpr=Math.min(2,devicePixelRatio||1),band,actual=-1,inicio=0,capas={},rnd=azar(Date.now()%99991+1),primera=true,fijo=false,cs=0,luz=document.getElementById('luz'),antes=null,mezcla=1,pAhora=null;
   L.forEach(function(l){if(!capas[l.foto]){var i=document.createElement('i');i.style.backgroundImage='url('+BASE+l.foto+'.jpg)';fondo.appendChild(i);capas[l.foto]=i}});
   function tamano(){var r=escena.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);band=new Bandada(Math.min(6000,Math.round(r.width*r.height/(r.width<760?330:210))),r.width,r.height,rnd);if(actual>=0){band.forma=L[actual].forma;band.voz=L[actual].voz}}
@@ -213,9 +213,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     Object.keys(capas).forEach(function(f){capas[f].classList.toggle('on',f===l.foto)});
     if(pAhora&&band.voz!==l.voz){antes={voz:band.voz,p:pAhora};mezcla=0}
     // la rueda: pasan de uno en uno los lentes que miran esta diapositiva
-    giros.forEach(clearTimeout);giros=[];
-    var cola=SEQ_DE[k],paso=Math.min(1600,(DUR-1800)/cola.length);
-    cola.forEach(function(n,q){giros.push(setTimeout(function(){gira(SEQ_INI[k]+q)},q*paso+(primera?0:900)))});
+    // todos: pasan los lentes uno a uno; uno solo: alterna con «10,000 lentes», para que nunca se repita la misma palabra
+    rueda.cambia(l.mira===LENTES?['10,000 lentes'].concat(LENTES):l.mira.length>1?l.mira:[l.mira[0]||'microsteps','10,000 lentes']);
     sonido.lente(l);
     var capa=sombra.children[cs=1-cs];capa.style.background='radial-gradient(55% 42% at 50% 50%,'+hexA(l.f[0],.78)+',transparent 100%),radial-gradient(80% 80% at 50% 50%,'+hexA(l.f[0],.3)+' 0%,'+hexA(l.f[0],.88)+' 100%),linear-gradient(180deg,'+hexA(l.f[0],.35)+',transparent 30%,transparent 60%,'+hexA(l.f[0],.6)+')';
     sombra.children[cs].classList.add('on');sombra.children[1-cs].classList.remove('on');
@@ -229,17 +228,26 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     },primera?400:1700);
     primera=false;
   }
-  // toda la secuencia de lentes, tres veces seguidas, para que siempre se vea lo que viene abajo
-  var SEQ=[],SEQ_INI=[],SEQ_DE=[],ab=-1;
-  L.forEach(function(l){var c=l.mira===LENTES?['10,000 lentes']:(l.mira.length?l.mira:['microsteps']);SEQ_INI.push(SEQ.length);SEQ_DE.push(c);SEQ=SEQ.concat(c)});
-  for(var vuelta=0;vuelta<3;vuelta++)SEQ.forEach(function(n){var d=document.createElement('div');d.textContent=n;pista.appendChild(d)});
-  function mueve(a,suave){var h=pista.firstChild.offsetHeight;if(!suave)pista.style.transition='none';pista.style.transform='translateY('+((1-a)*h)+'px)';if(!suave){pista.offsetHeight;pista.style.transition=''}
-    [].forEach.call(pista.children,function(c,i){c.classList.toggle('on',i===a)})}
-  function gira(i){
-    var N=SEQ.length,a=ab<0?i:ab+((i-ab%N)+N)%N;
-    if(a>=2*N){ab-=N;a-=N;mueve(ab,false)}
-    ab=a;mueve(a,true);
-  }
+  // la rueda: carrusel infinito a un solo ritmo, sin regresar. Sube un renglón cada 2.2 s;
+  // debajo se ven los que vienen, tomados de los lentes de la diapositiva actual.
+  var rueda=(function(){
+    var RITMO=2200,cola=['microsteps'],qi=0,a=0;
+    function sig(){var n=cola[qi%cola.length];qi++;return n}
+    function nuevo(n){var d=document.createElement('div');d.textContent=n;pista.appendChild(d);return d}
+    function pon(suave){var h=pista.firstChild.offsetHeight;if(!suave)pista.style.transition='none';pista.style.transform='translateY('+((1-a)*h)+'px)';if(!suave){pista.offsetHeight;pista.style.transition=''}
+      [].forEach.call(pista.children,function(c,i){c.classList.toggle('on',i===a)})}
+    function llena(){while(pista.children.length<a+3)nuevo(sig())}
+    function paso(){
+      a++;llena();pon(true);
+      if(a>8){pista.removeChild(pista.firstChild);a--;pon(false)}
+    }
+    nuevo('microsteps');llena();pon(false);setInterval(paso,RITMO);
+    return {cambia:function(c){
+      // lo que viene debajo se reescribe con los lentes nuevos; lo que ya pasó no se toca
+      cola=c;qi=0;while(pista.children.length>a+1)pista.removeChild(pista.lastChild);llena();
+      [].forEach.call(pista.children,function(c,i){c.classList.toggle('on',i===a)});
+    }};
+  })();
   // sonido: un piano que respira. Un acorde lento entra y sale cada ~8 s, en loop; cada lente cambia el acorde.
   // Notas sueltas, muy quedas, cuando una señal pasa de punto en punto.
   var sonido=(function(){
