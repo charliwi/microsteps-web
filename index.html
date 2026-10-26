@@ -247,7 +247,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
       requestAnimationFrame(function(){cola.shift();a++;pon(true)});
     }
     nuevo('');nuevo('');nuevo('microsteps');nuevo('');nuevo('');pon(false);
-    return {cambia:function(c){
+    return {acomoda:function(){pon(false)},cambia:function(c){
       var ya=pista.children[a].textContent;cola=c.filter(function(n,i){return !(i===0&&n===ya)});
       debajo();clearInterval(reloj);reloj=null;
       if(cola.length){setTimeout(sube,900);reloj=setInterval(sube,RITMO)}
@@ -319,7 +319,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   function alinea(){var m=document.getElementById('base').getBoundingClientRect(),c=document.getElementById('credito'),g=c.querySelector('svg');
     var H=g.getBoundingClientRect().height,arriba=g.getBoundingClientRect().top-c.getBoundingClientRect().top;
     c.style.top=(m.bottom-H*545/560-arriba)+'px';c.style.visibility='visible'}
-  window.addEventListener('resize',function(){clearTimeout(window._t);window._t=setTimeout(function(){tamano();alinea();var k=pista.children.length-1;if(k>=0){var h=pista.lastChild.offsetHeight;pista.style.transition='none';pista._y=(1-k)*h;pista.style.transform='translateY('+pista._y+'px)';pista.offsetHeight;pista.style.transition=''}},200)});
+  window.addEventListener('resize',function(){clearTimeout(window._t);window._t=setTimeout(function(){tamano();alinea();rueda.acomoda();},200)});
   alinea();if(document.fonts)document.fonts.ready.then(alinea);
   tamano();lente(0);
   if(reducido){for(var t=0;t<300;t++)band.paso();band.dibuja(ctx,L[0].p,L[0].voz,1)}
