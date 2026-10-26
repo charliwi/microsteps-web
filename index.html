@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>microsteps · murmurar</title>
-<meta name="description" content="Divulgar ciencia murmurando. Ciencia desde México. Small steps, deep changes.">
+<meta name="description" content="Algo se está murmurando. Compartimos ciencia desde México. Small steps, deep changes.">
 <meta property="og:title" content="microsteps · Algo se está murmurando">
-<meta property="og:description" content="Divulgar ciencia murmurando. Ciencia desde México.">
+<meta property="og:description" content="Compartimos ciencia desde México: un tema, varios lentes.">
 <meta property="og:image" content="https://microsteps.mx/og.jpg">
 <meta property="og:url" content="https://microsteps.mx/">
 <meta property="og:type" content="website">
@@ -15,7 +15,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23060B18'/%3E%3Cg fill='%23A9C46A'%3E%3Ccircle cx='9' cy='14' r='1.6'/%3E%3Ccircle cx='14' cy='11' r='1.6'/%3E%3Ccircle cx='19' cy='13' r='1.6'/%3E%3Ccircle cx='23' cy='17' r='1.6'/%3E%3Ccircle cx='13' cy='18' r='1.6'/%3E%3Ccircle cx='18' cy='20' r='1.6'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
-<!-- microsteps.mx · diseño iwi · 26 oct 2026. Una sola pantalla: el inicio invita con murmurar y cada lente dice cómo lo cruzamos, una frase por lente. Fotos de Carlos sin metadatos. La versión larga quedó en v1-larga.html. -->
+<!-- microsteps.mx · diseño iwi · 26 oct 2026 -->
 <style>
 /* una pantalla: la murmuración y la foto atrás, una sola frase al centro */
 :root{
@@ -32,28 +32,35 @@ body{font-family:var(--f);background:var(--abismo);color:var(--tinta);-webkit-fo
 .fondo i.on{opacity:1}
 .tinte{position:absolute;inset:0;mix-blend-mode:color;transition:background-color 3.2s ease,opacity 3.2s ease}
 .sombra{position:absolute;inset:0}
+.sombra i{position:absolute;inset:0;opacity:0;transition:opacity 3.2s ease}
+.sombra i.on{opacity:1}
+.luz{position:absolute;left:-40%;top:-40%;width:180%;height:180%;will-change:transform;opacity:.35;pointer-events:none}
 canvas{position:absolute;inset:0;width:100%;height:100%}
 .centro{position:absolute;inset:0;display:grid;place-items:center;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));pointer-events:none}
-.frase{max-width:760px;text-align:center;text-shadow:0 0 22px rgba(4,6,14,.75),0 0 4px rgba(4,6,14,.6)}
-.frase .lente{font-family:var(--m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta2)}
-.frase h1{font-size:clamp(34px,6vw,76px);font-weight:300;letter-spacing:-.035em;line-height:1.04;margin-top:18px;text-wrap:balance}
+.frase{max-width:760px;text-align:center;text-shadow:0 0 28px rgba(4,6,14,.85),0 0 6px rgba(4,6,14,.7)}
+.frase .lente{font-family:var(--m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.78)}
+.frase h1{color:#fff;font-size:clamp(34px,6vw,76px);font-weight:300;letter-spacing:-.035em;line-height:1.04;margin-top:18px;text-wrap:balance}
 .frase h1 b{font-weight:600}
-.frase p{font-size:clamp(15px,1.4vw,18px);line-height:1.5;color:var(--tinta2);margin-top:20px;text-wrap:balance}
+.frase p{font-size:clamp(15px,1.4vw,18px);line-height:1.5;color:rgba(255,255,255,.86);margin-top:20px;text-wrap:balance}
 .frase>*{transition:opacity 1.6s ease,filter 1.6s ease,transform 1.6s ease}
 .frase.fuera>*{opacity:0;filter:blur(8px);transform:translateY(6px)}
 .marca{position:absolute;top:max(22px,env(safe-area-inset-top,0px));left:max(24px,env(safe-area-inset-left,0px));font-size:20px;font-weight:300;letter-spacing:.05em}
-.lema{position:absolute;bottom:max(22px,env(safe-area-inset-bottom,0px));left:max(24px,env(safe-area-inset-left,0px));font-size:14px;font-weight:300;color:var(--tinta2)}
-.lema b{font-weight:600;color:var(--tinta)}
+.lema{position:absolute;bottom:max(40px,env(safe-area-inset-bottom,0px));left:max(24px,env(safe-area-inset-left,0px));font-size:14px;font-weight:300;color:var(--tinta2)}
+.lema{line-height:1.1;font-size:28px!important;font-weight:300;letter-spacing:-.01em}
+.lema b{display:block;font-weight:400;color:var(--tinta);border-top:1px solid rgba(238,242,248,.4);margin-top:7px;padding-top:6px}
+.base{display:inline-block;width:0;height:0;vertical-align:baseline}
+/* la firma: «diseño:» y el logo, con la base del logo en la base de «deep changes.» (los redondos bajan un poco) */
+.credito{position:absolute;top:0;right:max(24px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:flex-end;gap:5px;font-size:11px;font-weight:300;color:var(--tinta2);visibility:hidden}
+.credito svg{height:11px;width:auto;color:#fff;display:block}
 .marca small,.lema small{display:block;font-family:var(--m);font-size:11px;letter-spacing:.06em;text-transform:none;color:var(--tinta2);margin-top:6px;font-weight:400}
-.frase .fuente{font-family:var(--m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:14px;color:var(--tinta2)}
+.frase .fuente{font-family:var(--m);font-size:11px;letter-spacing:.04em;text-transform:none;margin-top:16px;font-size:13px;color:rgba(255,255,255,.88)}
 .frase p.sub{max-width:520px;margin-left:auto;margin-right:auto}
-/* los lentes son el menú: líneas, no botones */
-.lentes{position:absolute;bottom:max(20px,env(safe-area-inset-bottom,0px));right:max(24px,env(safe-area-inset-right,0px));display:flex;gap:22px}
-.lentes button{font:inherit;font-size:13px;letter-spacing:.04em;color:var(--tinta2);background:none;border:0;padding:4px 0;border-bottom:1px solid transparent;cursor:pointer;transition:color .6s,border-color .6s;position:relative}
-.lentes button:hover,.lentes button:focus-visible{color:var(--tinta);outline:none}
-.lentes button.on{color:var(--tinta);border-color:var(--tinta)}
-@media (max-width:760px){.lema{top:max(26px,env(safe-area-inset-top,0px));bottom:auto;left:auto;right:max(24px,env(safe-area-inset-right,0px));font-size:12px}
-  .lentes{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));justify-content:center;flex-wrap:wrap;gap:4px 16px}}
+/* los lentes que miran cada diapositiva se encienden */
+.lentes{position:absolute;bottom:max(46px,env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;pointer-events:none;font-size:19px;font-weight:400;letter-spacing:.01em;color:rgba(255,255,255,.92);text-shadow:0 0 14px rgba(4,6,14,.8);transition:opacity 1.2s ease;padding:0 300px}
+.lentes.fuera{opacity:0}
+@media (max-width:760px){.lema{font-size:21px!important}
+  .lentes{padding:0;left:max(24px,env(safe-area-inset-left,0px));right:max(24px,env(safe-area-inset-right,0px));text-align:left;font-size:15px;bottom:calc(max(40px,env(safe-area-inset-bottom,0px)) + 76px)}
+  .frase h1{font-size:34px}.frase p{font-size:15px}}
 @media (prefers-reduced-motion:reduce){.fondo i,.tinte,.frase>*{transition:opacity .3s}}
 </style>
 </head>
@@ -61,29 +68,38 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 <div class="escena" id="escena">
   <div class="fondo" id="fondo"></div>
   <div class="tinte" id="tinte"></div>
-  <div class="sombra" id="sombra"></div>
+  <div class="sombra" id="sombra"><i></i><i></i></div>
+  <div class="luz" id="luz"></div>
   <canvas id="cielo"></canvas>
   <div class="centro"><div class="frase fuera" id="frase"><div class="lente" id="lente"></div><h1 id="tit"></h1><p class="sub" id="sub"></p><div class="fuente" id="fuente"></div></div></div>
-  <span class="marca">microsteps<small>ciencia desde México</small></span>
-  <span class="lema">Small steps, <b>deep changes.</b><small>diseño · iwi</small></span>
-  <nav class="lentes" id="lentes" aria-label="Lentes"></nav>
+  <span class="marca">microsteps<small>compartimos ciencia desde México</small></span>
+  <span class="lema">Small steps,<b>deep changes.<i class="base" id="base"></i></b></span>
+  <span class="credito" id="credito">diseño:<svg viewBox="0 420 1614 560" role="img" aria-label="iwi"><path d="M 1513.5 876.679688 L 1531.269531 864.511719 C 1548.167969 855.480469 1568.640625 861.167969 1580.453125 876.851562 C 1585.386719 883.402344 1583.84375 891.808594 1578.414062 897.148438 C 1569.648438 905.777344 1560.386719 913.023438 1549.589844 919.363281 C 1497.429688 949.988281 1440.265625 968.269531 1381.449219 974.460938 L 1334.890625 974.6875 C 1293.242188 969.375 1249.769531 953.582031 1227.195312 911.398438 C 1188.71875 942.226562 1144.066406 963.007812 1097.734375 968.515625 L 1062.179688 968.347656 C 1027.4375 964.410156 995.085938 947.75 976.726562 913.699219 L 957.417969 929.15625 C 922.703125 956.9375 873.644531 973.644531 831.121094 964.074219 C 803.246094 957.804688 779.472656 941.015625 766.699219 911.515625 C 721.015625 946.816406 667.769531 973.179688 612.5625 965.984375 C 581.496094 961.09375 553.269531 945.457031 539.199219 912.675781 C 499.890625 941.453125 456.417969 962.257812 410.671875 968.242188 C 396.265625 970.125 382.0625 968.90625 367.617188 968.65625 C 331.265625 962.40625 299.472656 948.289062 280.472656 911.992188 C 261.933594 928.058594 242.535156 939.957031 221.519531 950.304688 C 192.046875 964.816406 161.324219 972.089844 129.332031 974.441406 C 96.710938 976.839844 57.273438 969.761719 27.441406 955.257812 C 19.335938 951.316406 11.988281 943.726562 11.082031 933.859375 C 10.035156 922.445312 18.359375 914.089844 27.492188 911.871094 C 40.296875 908.761719 52.6875 910.960938 63.074219 919.863281 C 90.707031 928.710938 118.644531 928.503906 147.066406 922.902344 C 194.023438 913.652344 233.816406 887.265625 268.996094 851.03125 C 271.023438 825.25 275.523438 800.8125 283.695312 776.148438 C 297.613281 734.132812 321.738281 675.304688 345.902344 641.136719 C 353.8125 629.953125 362.941406 620.832031 374.621094 615.417969 C 390.597656 608.015625 409.167969 610.367188 421.464844 624.351562 C 442.230469 647.96875 424.5 693.246094 412.171875 722.726562 C 391.0625 773.210938 365.179688 819.171875 332.429688 861.808594 C 329.003906 884.53125 340.722656 905.777344 360.148438 914.175781 C 388.09375 926.257812 431.828125 915.101562 458.554688 900.539062 L 475.996094 891.039062 C 496.386719 879.925781 514.558594 865.59375 531.144531 848.15625 L 535.503906 820.214844 C 542.566406 774.925781 574.652344 701.472656 596.925781 660.214844 C 605.753906 643.859375 615.328125 629.160156 627.441406 616.007812 C 638.628906 603.859375 653.839844 596.65625 669.050781 598.015625 C 682.980469 599.261719 695.429688 607.183594 701.320312 620.988281 C 712.125 646.316406 698.597656 683.96875 687.605469 710.230469 C 666.601562 760.394531 639.957031 806.457031 607.746094 848.359375 C 595.59375 864.164062 592.601562 861.507812 595.949219 885.800781 C 597.921875 900.109375 607.722656 911.664062 620.597656 914.273438 L 631.132812 915.363281 L 643.035156 914.222656 C 688.085938 905.496094 724.675781 877.855469 758.246094 843.664062 C 760.625 814.578125 766.941406 787.511719 775.945312 760.050781 C 789.550781 718.550781 809.1875 670.183594 831.722656 634.449219 C 847.351562 609.675781 870.824219 591.539062 897.226562 600.984375 C 928.160156 612.042969 926.628906 648.792969 917.027344 680.910156 C 897.996094 744.558594 862.019531 808.003906 822.667969 858.375 L 822.746094 879.261719 C 822.789062 890.40625 828.589844 900.351562 836.746094 907.050781 C 845.871094 914.554688 857.34375 914.925781 868.613281 912.488281 C 891.925781 907.445312 912.855469 895.714844 931.542969 879.5 C 942.695312 869.824219 952.734375 860.238281 961.953125 848.308594 C 962.292969 807.945312 969.316406 770.136719 981.085938 732.472656 C 992.648438 695.46875 1008.183594 650.40625 1030.257812 621.097656 C 1041.746094 605.84375 1058.386719 595.90625 1076.144531 597.851562 C 1091.269531 599.511719 1104.832031 608.722656 1110.550781 624.398438 C 1120.855469 652.644531 1108.449219 693.488281 1097.84375 722.488281 C 1084.054688 760.175781 1067.171875 795.515625 1047.136719 829.332031 L 1027.667969 859.660156 C 1027.246094 892.945312 1043.898438 914.128906 1073.367188 917.585938 C 1078.332031 918.167969 1082.898438 918.375 1087.765625 917.613281 C 1126.945312 911.480469 1166.113281 890.511719 1196.472656 862.273438 L 1210.820312 847.234375 L 1211.324219 823.316406 C 1213.960938 798.011719 1218.316406 774.042969 1225.332031 749.84375 C 1237.382812 708.273438 1259.664062 645.230469 1285.925781 615.355469 C 1298.9375 600.554688 1316.675781 593.59375 1334.574219 598.289062 C 1353.9375 603.371094 1366.414062 621.085938 1367.257812 643.734375 C 1368.523438 677.707031 1348.351562 730.429688 1333.507812 762.796875 C 1317.5 797.699219 1299.722656 830.183594 1277.71875 860.734375 C 1277.976562 885.554688 1290.714844 906.214844 1311.160156 915.601562 C 1322.296875 920.714844 1334.027344 922.359375 1346.074219 923.691406 L 1365.527344 923.597656 L 1391.445312 920.746094 C 1434.152344 913.910156 1474.964844 899.546875 1513.5 876.679688 " fill="currentColor"/><path d="M 487.679688 541.597656 C 467.914062 580.09375 429.25 596.605469 401.324219 578.476562 C 373.398438 560.351562 366.785156 514.449219 386.554688 475.953125 C 406.320312 437.457031 444.984375 420.945312 472.910156 439.074219 C 500.835938 457.199219 507.449219 503.101562 487.679688 541.597656 " fill="currentColor"/><path d="M 1416.417969 533.480469 C 1396.648438 571.976562 1357.984375 588.488281 1330.058594 570.363281 C 1302.136719 552.238281 1295.519531 506.335938 1315.289062 467.839844 C 1335.058594 429.34375 1373.722656 412.832031 1401.644531 430.957031 C 1429.570312 449.085938 1436.183594 494.988281 1416.417969 533.480469 " fill="currentColor"/></svg></span>
+  <div class="lentes" id="lentes" aria-hidden="true"></div>
 </div>
 <script>
 (function(){
   var reducido=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var BASE='img/';
   // el inicio invita con murmurar; después cada lente dice cómo lo cruzamos. El inicio sólo sale una vez.
+  // invita, pregunta, responde con el dato, conecta, y después pasan los lentes. Abajo se encienden los que miran cada diapositiva
+  var LENTES=['naturaleza','ciencia','psicología','neurociencia','educación','espiritualidad','chamanismo','masculinidad'];
   var L=[
-    {lente:'murmurar', menu:'', tit:'Algo se está <b>murmurando.</b>', sub:'Toca para escucharlo.', foto:'drive-6524', voz:'susurro', forma:'libre', to:.15, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#E6F8C8']},
-    {lente:'murmurar · desde la naturaleza', menu:'naturaleza', tit:'Miles que se mueven <b>como uno.</b>', sub:'Estorninos, peces, hongos. Nadie los dirige y aun así se mueven juntos: la naturaleza ya murmura.', foto:'repisas-musgo-a', voz:'masa', forma:'libre', to:.2, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#E6F8C8']},
-    {lente:'murmurar · desde la psicología', menu:'psicología', tit:'¿Me muevo yo, <b>o se mueve el sistema?</b>', sub:'Lo que sientes también se mueve con quienes te rodean. Un cambio pequeño por dentro mueve el conjunto.', foto:'salvia-azul-b', voz:'tu', forma:'espiral', to:.45, tinte:'#5A2E9A', f:['#0C0820','#2E1A5C'], p:['#C3A8EC','#F4ECFF']},
-    {lente:'murmurar · desde la ciencia', menu:'ciencia', tit:'Tres reglas simples. <b>Una forma que nadie dirige.</b>', sub:'Cada ave mira sólo a sus seis o siete vecinos más cercanos: no chocar, alinearse, acercarse. Con eso basta para que miles formen una figura. La ciencia lo llama comportamiento emergente.', fuente:'Reynolds, 1987 · Ballerini y otros, PNAS 2008', foto:'salvia-azul-c', voz:'vectores', forma:'circulo', to:.15, tinte:'#1E4FA8', f:['#050B1C','#0E2350'], p:['#8DBDE6','#E4F0FB']},
-    {lente:'murmurar · desde la educación', menu:'educación', tit:'La ciencia también <b>se murmura.</b>', sub:'Lo que sabemos, dicho claro y con su fuente, para que pase de persona en persona.', foto:'salvia-azul-a', voz:'voz', forma:'libre', to:.25, tinte:'#3A3F9A', f:['#070C24','#1A2A6A'], p:['#A9B8F0','#F5D98B']},
-    {lente:'murmurar · desde el chamanismo', menu:'chamanismo', tit:'Lo que se mueve junto <b>está conectado.</b>', sub:'Muchas tradiciones lo saben desde antes: los patrones de la naturaleza son un mismo tejido. Lo escuchamos con respeto, junto a la ciencia.', foto:'drive-4183', voz:'red', forma:'espiral', to:.55, tinte:'#4A2A7A', f:['#0A0718','#2A1A4A'], p:['#E8C27A','#FFF1CF']},
-    {lente:'murmurar · desde la masculinidad', menu:'masculinidad', tit:'Ni alfa ni beta. <b>En la parvada nadie manda.</b>', sub:'El «lobo alfa» salió de lobos en cautiverio. En libertad, la manada es una familia.', fuente:'Mech, 1999 · Canadian Journal of Zoology', foto:'drive-6525', voz:'turno', forma:'libre', to:.35, tinte:'#2A3A50', f:['#070B12','#1B2633'], p:['#B8C4D4','#FFFFFF']}
+    {lente:'microsteps', tit:'Algo se está <b>murmurando.</b>', sub:'Toca aquí.', mira:[], foto:'drive-6524', voz:'susurro', forma:'libre', to:.15, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#E6F8C8']},
+    {lente:'una pregunta', tit:'¿Cómo se llama cuando miles de aves <b>dibujan formas en el cielo?</b>', sub:'Se mueven juntas, en patrones que cambian, y nadie las dirige.', mira:[], foto:'drive-5245', voz:'susurro', forma:'espiral', to:.35, tinte:'#3A3F9A', f:['#070C24','#1A2A6A'], p:['#A9B8F0','#EEF1FF']},
+    {lente:'desde la naturaleza y la ciencia', tit:'<b>Murmuración.</b>', sub:'Cada estornino sigue sólo a sus seis o siete vecinos más cercanos, estén a la distancia que estén. Con eso basta para que la parvada no se rompa.', fuente:'Ballerini y otros, PNAS 2008 · estorninos en Roma', mira:['naturaleza','ciencia'], foto:'repisas-musgo-a', voz:'masa', forma:'libre', to:.2, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#E6F8C8']},
+    {lente:'microsteps', tit:'Todo está conectado: <b>se mueve uno, se mueven todos.</b>', sub:'Y así podemos observar las cosas.', mira:LENTES, foto:'drive-4908', voz:'masa', forma:'espiral', to:.25, tinte:'#1F4A3A', f:['#03100C','#12352A'], p:['#A9D4B8','#EAF8EE']},
+    {lente:'el lente de la psicología', tit:'¿Me muevo yo, <b>o se mueve el sistema?</b>', sub:'Las ideas nos mueven igual: sin forzar, de vecino en vecino.', mira:['psicología'], foto:'salvia-azul-b', voz:'tu', forma:'espiral', to:.45, tinte:'#5A2E9A', f:['#0C0820','#2E1A5C'], p:['#C3A8EC','#F4ECFF']},
+    {lente:'el lente de la neurociencia', tit:'Las neuronas también <b>murmuran.</b>', sub:'Una se activa y enciende a sus vecinas, en cascadas que la ciencia llama avalanchas neuronales.', fuente:'Beggs y Plenz, 2003 · Journal of Neuroscience', mira:['neurociencia','ciencia'], foto:'salvia-azul-c', voz:'voz', forma:'libre', to:.15, tinte:'#1E4FA8', f:['#050B1C','#0E2350'], p:['#8DBDE6','#F5D98B']},
+    {lente:'el lente de la educación', tit:'La ciencia también <b>se murmura.</b>', sub:'Lo que sabemos, dicho claro y con su fuente, de persona en persona.', mira:['educación'], foto:'drive-5245', voz:'masa', forma:'espiral', to:.15, tinte:'#1E4FA8', f:['#050B1C','#0E2350'], p:['#8DBDE6','#F5D98B']},
+    {lente:'el lente de la espiritualidad', tit:'Quien ve a todos los seres en sí mismo <b>y a sí mismo en todos los seres.</b>', sub:'Hace casi tres mil años ya se decía así: todo está conectado.', fuente:'Isha Upanishad, verso 6', mira:['espiritualidad'], foto:'drive-4908', voz:'red', forma:'circulo', to:.35, tinte:'#5A3A20', f:['#120A04','#3A2410'], p:['#E8C27A','#FFF1CF']},
+    {lente:'el lente del chamanismo', tit:'Lo vivo se escucha <b>en conjunto.</b>', sub:'En la sierra mazateca, María Sabina lo sabía desde antes.', mira:['chamanismo'], foto:'drive-4183', voz:'red', forma:'espiral', to:.55, tinte:'#4A2A7A', f:['#0A0718','#2A1A4A'], p:['#E8C27A','#FFF1CF']},
+    {lente:'un lente más', tit:'Jacobo Grinberg lo llamó <b>sintergia.</b>', sub:'Su teoría propone que la conciencia y el espacio forman un mismo campo: todo está conectado.', fuente:'Jacobo Grinberg · teoría sintérgica', mira:['ciencia','chamanismo'], foto:'salvia-azul-a', voz:'vectores', forma:'circulo', to:.4, tinte:'#3A3F9A', f:['#070C24','#1A2A6A'], p:['#A9B8F0','#EEF1FF']},
+    {lente:'el lente de la masculinidad', tit:'Ni alfa ni beta. <b>En la parvada nadie manda.</b>', sub:'El «lobo alfa» salió de lobos en cautiverio. En libertad, la manada es una familia.', fuente:'Mech, 1999 · Canadian Journal of Zoology', mira:['masculinidad','ciencia'], foto:'drive-6525', voz:'turno', forma:'libre', to:.35, tinte:'#2A3A50', f:['#070B12','#1B2633'], p:['#B8C4D4','#FFFFFF']},
+    {lente:'microsteps', tit:'Todos estamos <b>murmurando.</b>', sub:'Un tema, varios lentes. En cada uno decimos qué es dato y qué es visión. Murmura con nosotros.', mira:LENTES, foto:'drive-6524', voz:'masa', forma:'libre', to:.2, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#E6F8C8']}
   ];
-  function siguiente(){return actual+1<L.length?actual+1:1}
-  var DUR=11000;
+  function siguiente(){return (actual+1)%L.length}
+  var DUR=9000;
   function azar(s){s=s>>>0||1;return function(){s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)%100000)/100000}}
   // Bandada sin estelas. Tres grupos que se separan y se vuelven a juntar; cada punto con su profundidad (z).
   function Bandada(n,w,h,rnd){
@@ -97,14 +113,18 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     // regla de los estorninos: cada uno sigue a sus 7 vecinos más cercanos, estén donde estén (Ballerini y otros, 2008)
     var n=this.n,w=this.w,h=this.h,K=7,S2=36,cel=16,cols=Math.ceil(w/cel)+1,filas=Math.ceil(h/cel)+1;
     var bd=this.bd||(this.bd=new Float32Array(K)),bj=this.bj||(this.bj=new Int32Array(K));
-    var cab=new Int32Array(cols*filas).fill(-1),sig=new Int32Array(n);
+    if(!this.cab||this.cab.length!==cols*filas)this.cab=new Int32Array(cols*filas);if(!this.sig)this.sig=new Int32Array(n);
+    var cab=this.cab,sig=this.sig;cab.fill(-1);
     for(var i=0;i<n;i++){var c=((this.x[i]/cel)|0)+((this.y[i]/cel)|0)*cols;if(c>=0&&c<cab.length){sig[i]=cab[c];cab[c]=i}}
     var t=++this.t,voz=this.voz;
     // el centro da vueltas; los grupos se abren y se cierran (se dividen y se vuelven a juntar)
     var ox=this.ox=w*.5+Math.sin(t*.0042)*w*.22, oy=this.oy=h*.5+Math.cos(t*.0033)*h*.18;
-    var abre=(voz==='masa'?.3:voz==='susurro'?.08:.16)*Math.min(w,h)*(.5-.5*Math.cos(t*.0045));
+    // todo lo que depende de la voz se acerca despacio a su valor nuevo: sin cortes al cambiar de lente
+    this.af=(this.af==null?.16:this.af)+(((voz==='masa'?.3:voz==='susurro'?.08:.16))-(this.af==null?.16:this.af))*.006;
+    var abre=this.af*Math.min(w,h)*(.5-.5*Math.cos(t*.0045));
     for(var q=0;q<3;q++){var a=q*2.094+t*.0021;this.ax[q]=ox+Math.cos(a)*abre*1.3;this.ay[q]=oy+Math.sin(a)*abre}
-    var vmax=voz==='susurro'?1.1:2.1,vmin=voz==='susurro'?.5:1.1;
+    this.vm=(this.vm==null?1.1:this.vm)+((voz==='susurro'?1.1:1.9)-(this.vm==null?1.1:this.vm))*.008;
+    var vmax=this.vm,vmin=vmax*.5;
     var vozVoz=voz==='voz';
     if(vozVoz&&t%40===0){var k0=(this.rnd()*n)|0;if(!this.r[k0]){var an=this.rnd()*6.283;this.b[k0]=1;this.r[k0]=90;this.hx[k0]=Math.cos(an);this.hy[k0]=Math.sin(an);this.src[k0]=-1}}
     // la punta se turna: cada tanto otro punto guía
@@ -129,7 +149,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
       // quien recibe la señal gira hacia donde la mandó quien la emitió
       if(vozVoz&&this.b[i]>.25){vx+=(this.hx[i]*vmax-vx)*.045;vy+=(this.hy[i]*vmax-vy)*.045}
       if(voz==='turno'&&i!==this.lider){var qx=LX+LVX*30-x,qy=LY+LVY*30-y,qd=Math.sqrt(qx*qx+qy*qy)+1;if(qd<w*.5){vx+=qx/qd*.03;vy+=qy/qd*.03}}
-      if(k){vx+=(ax/k-vx)*.08;vy+=(ay/k-vy)*.08;var cx=cxs/k,cy=cys/k,cd=Math.sqrt(cx*cx+cy*cy);if(cd>30){cx*=30/cd;cy*=30/cd}vx+=cx*.004;vy+=cy*.004}
+      if(k){vx+=(ax/k-vx)*.06;vy+=(ay/k-vy)*.06;var cx=cxs/k,cy=cys/k,cd=Math.sqrt(cx*cx+cy*cy);if(cd>30){cx*=30/cd;cy*=30/cd}vx+=cx*.004;vy+=cy*.004}
       vx+=sx*.4;vy+=sy*.4;
       var g=this.g[i],px=this.ax[g]-x,py=this.ay[g]-y,pd=Math.sqrt(px*px+py*py)+1;
       if(this.forma==='espiral'){vx+=(-py/pd)*.06+px/pd*.012;vy+=(px/pd)*.06+py/pd*.012}
@@ -142,21 +162,20 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     }
   };
   // cada lente dibuja con su propia voz
-  Bandada.prototype.dibuja=function(ctx,p){
-    var n=this.n,x=this.x,y=this.y,z=this.z,voz=this.voz,t=this.t;
-    ctx.clearRect(0,0,this.w,this.h);
+  Bandada.prototype.dibuja=function(ctx,p,voz,K){
+    var n=this.n,x=this.x,y=this.y,z=this.z,t=this.t;
     if(voz==='vectores'){
-      for(var c=0;c<2;c++){ctx.beginPath();ctx.strokeStyle=p[c];ctx.globalAlpha=c?.9:.55;ctx.lineWidth=c?1:.8;
+      for(var c=0;c<2;c++){ctx.beginPath();ctx.strokeStyle=p[c];ctx.globalAlpha=(c?.9:.55)*K;ctx.lineWidth=c?1:.8;
         for(var i=c;i<n;i+=c?9:1){if(!c&&i%9===0)continue;var L=2+z[i]*4;ctx.moveTo(x[i]-this.vx[i]*L,y[i]-this.vy[i]*L);ctx.lineTo(x[i],y[i])}ctx.stroke()}
       ctx.globalAlpha=1;return;
     }
     if(voz==='voz'){
-      ctx.beginPath();ctx.strokeStyle=p[1];ctx.lineWidth=.7;ctx.globalAlpha=.55;
+      ctx.beginPath();ctx.strokeStyle=p[1];ctx.lineWidth=.7;ctx.globalAlpha=(.55)*K;
       for(var i=0;i<n;i++){var b=this.b[i],j=this.src[i];if(b<.3||j<0)continue;var dx=x[j]-x[i],dy=y[j]-y[i];if(dx*dx+dy*dy>400)continue;ctx.moveTo(x[j],y[j]);ctx.lineTo(x[i],y[i])}
       ctx.stroke();
     }
     if(voz==='red'){
-      ctx.beginPath();ctx.strokeStyle=p[0];ctx.globalAlpha=.32;ctx.lineWidth=.7;
+      ctx.beginPath();ctx.strokeStyle=p[0];ctx.globalAlpha=(.32)*K;ctx.lineWidth=.7;
       for(var i=0;i<n;i+=2){var j=this.nb[i];if(j<0)continue;var dx=x[j]-x[i],dy=y[j]-y[i];if(dx*dx+dy*dy>324)continue;ctx.moveTo(x[i],y[i]);ctx.lineTo(x[j],y[j])}
       ctx.stroke();
     }
@@ -166,24 +185,28 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
       else if(voz==='voz'){var b=this.b[i];s=1.3+b*.9;a=.42+b*.5;if(b>.3)col=p[1]}
       else if(voz==='red'){s=1.1+z[i]*1.6;a=.5+.5*z[i]}
       else{s=.7+z[i]*1.9;a=.32+.6*z[i];if(z[i]>.9)col=p[1]}
-      ctx.globalAlpha=a;ctx.fillStyle=col;ctx.fillRect(x[i]-s/2,y[i]-s/2,s,s);
+      ctx.globalAlpha=(a)*K;ctx.fillStyle=col;ctx.fillRect(x[i]-s/2,y[i]-s/2,s,s);
     }
-    if(voz==='turno'){var e=Math.min(1,(t-this.tl)/40)*Math.max(0,1-(t-this.tl)/300),l=this.lider;ctx.globalAlpha=.25+.6*e;ctx.strokeStyle=p[1];ctx.lineWidth=1;ctx.beginPath();ctx.arc(x[l],y[l],6+4*e,0,6.283);ctx.stroke()}
+    if(voz==='turno'){var e=Math.min(1,(t-this.tl)/40)*Math.max(0,1-(t-this.tl)/300),l=this.lider;ctx.globalAlpha=(.25+.6*e)*K;ctx.strokeStyle=p[1];ctx.lineWidth=1;ctx.beginPath();ctx.arc(x[l],y[l],6+4*e,0,6.283);ctx.stroke()}
     if(voz==='tu'){ // uno de todos: tú
-      ctx.globalAlpha=1;ctx.strokeStyle=p[1];ctx.lineWidth=1;ctx.beginPath();ctx.arc(x[0],y[0],8,0,6.283);ctx.stroke();ctx.fillStyle='#fff';ctx.fillRect(x[0]-1.5,y[0]-1.5,3,3);
+      ctx.globalAlpha=(1)*K;ctx.strokeStyle=p[1];ctx.lineWidth=1;ctx.beginPath();ctx.arc(x[0],y[0],8,0,6.283);ctx.stroke();ctx.fillStyle='#fff';ctx.fillRect(x[0]-1.5,y[0]-1.5,3,3);
     }
-    ctx.globalAlpha=1;
+    ctx.globalAlpha=(1)*K;
   };
   var escena=document.getElementById('escena'),fondo=document.getElementById('fondo'),tinte=document.getElementById('tinte'),sombra=document.getElementById('sombra');
   var cv=document.getElementById('cielo'),ctx=cv.getContext('2d'),frase=document.getElementById('frase'),barras=document.getElementById('lentes');
-  var dpr=Math.min(2,devicePixelRatio||1),band,actual=-1,inicio=0,capas={},rnd=azar(Date.now()%99991+1),primera=true,fijo=false;
-  L.forEach(function(l){if(!capas[l.foto]){var i=document.createElement('i');i.style.backgroundImage='url('+BASE+l.foto+'.jpg)';fondo.appendChild(i);capas[l.foto]=i}if(l.menu){var b=document.createElement('button');b.textContent=l.menu;b.onclick=function(e){e.stopPropagation();fijo=true;lente(L.indexOf(l))};barras.appendChild(b)}});
-  function tamano(){var r=escena.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);band=new Bandada(Math.min(6000,Math.round(r.width*r.height/210)),r.width,r.height,rnd);if(actual>=0){band.forma=L[actual].forma;band.voz=L[actual].voz}}
+  var dpr=Math.min(2,devicePixelRatio||1),band,actual=-1,inicio=0,capas={},rnd=azar(Date.now()%99991+1),primera=true,fijo=false,cs=0,luz=document.getElementById('luz'),antes=null,mezcla=1,pAhora=null;
+  L.forEach(function(l){if(!capas[l.foto]){var i=document.createElement('i');i.style.backgroundImage='url('+BASE+l.foto+'.jpg)';fondo.appendChild(i);capas[l.foto]=i}});
+  function tamano(){var r=escena.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);band=new Bandada(Math.min(6000,Math.round(r.width*r.height/(r.width<760?330:210))),r.width,r.height,rnd);if(actual>=0){band.forma=L[actual].forma;band.voz=L[actual].voz}}
   function lente(k){
     actual=k;var l=L[k];inicio=performance.now();
     Object.keys(capas).forEach(function(f){capas[f].classList.toggle('on',f===l.foto)});
-    barras.querySelectorAll('button').forEach(function(b,i){b.classList.toggle('on',i===k-1)});
-    tinte.style.backgroundColor=l.tinte;tinte.style.opacity=l.to;band.forma=l.forma;band.voz=l.voz;
+    if(pAhora&&band.voz!==l.voz){antes={voz:band.voz,p:pAhora};mezcla=0}
+    barras.classList.add('fuera');setTimeout(function(){barras.textContent=l.mira.length===LENTES.length?LENTES.join(' · '):l.mira.join(' · ');barras.classList.remove('fuera')},primera?0:1300);
+    var capa=sombra.children[cs=1-cs];capa.style.background='radial-gradient(55% 42% at 50% 50%,'+hexA(l.f[0],.78)+',transparent 100%),radial-gradient(80% 80% at 50% 50%,'+hexA(l.f[0],.3)+' 0%,'+hexA(l.f[0],.88)+' 100%),linear-gradient(180deg,'+hexA(l.f[0],.35)+',transparent 30%,transparent 60%,'+hexA(l.f[0],.6)+')';
+    sombra.children[cs].classList.add('on');sombra.children[1-cs].classList.remove('on');
+    luz.style.background='radial-gradient(closest-side,'+hexA(l.f[1],.55)+',transparent)';
+    tinte.style.backgroundColor=l.tinte;tinte.style.opacity=l.to;band.forma=l.forma;band.voz=l.voz;pAhora=l.p;
     frase.classList.add('fuera');
     setTimeout(function(){
       document.getElementById('lente').textContent=l.lente;document.getElementById('tit').innerHTML=l.tit;
@@ -199,18 +222,24 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     if(!fijo&&t-inicio>DUR)lente(siguiente());
     var l=L[actual];
     band.paso();
-    band.dibuja(ctx,l.p);
+    ctx.clearRect(0,0,band.w,band.h);
+    if(antes&&mezcla<1){mezcla=Math.min(1,mezcla+.012);var e=mezcla*mezcla*(3-2*mezcla);band.dibuja(ctx,antes.p,antes.voz,1-e);band.dibuja(ctx,l.p,l.voz,e)}else band.dibuja(ctx,l.p,l.voz,1);
     var nx=band.ox/band.w,ny=band.oy/band.h;
     lx+=(nx-lx)*.006;ly+=(ny-ly)*.006;                     // la luz llega tarde
     fx+=((nx-.5)*-3-fx)*.01;fy+=((ny-.5)*-2.4-fy)*.01;      // el fondo se mueve poco y al revés
     fondo.style.transform='translate('+fx.toFixed(3)+'%,'+fy.toFixed(3)+'%) scale(1.04)';
     // un velo al centro para que la frase respire
-    sombra.style.background='radial-gradient(40% 30% at 50% 50%,'+hexA(l.f[0],.55)+',transparent 100%),radial-gradient(60% 60% at '+(lx*100).toFixed(1)+'% '+(ly*100).toFixed(1)+'%,'+hexA(l.f[1],.12)+','+hexA(l.f[0],.78)+' 75%)';
+    luz.style.transform='translate3d('+((lx-.5)*55).toFixed(2)+'%,'+((ly-.5)*55).toFixed(2)+'%,0)';
     requestAnimationFrame(bucle);
   }
-  window.addEventListener('resize',function(){clearTimeout(window._t);window._t=setTimeout(tamano,200)});
+  // la base de las letras redondas del logo está en 545 de 560 (viewBox): ahí va la base de «deep changes.»
+  function alinea(){var m=document.getElementById('base').getBoundingClientRect(),c=document.getElementById('credito'),g=c.querySelector('svg');
+    var H=g.getBoundingClientRect().height,arriba=g.getBoundingClientRect().top-c.getBoundingClientRect().top;
+    c.style.top=(m.bottom-H*545/560-arriba)+'px';c.style.visibility='visible'}
+  window.addEventListener('resize',function(){clearTimeout(window._t);window._t=setTimeout(function(){tamano();alinea()},200)});
+  alinea();if(document.fonts)document.fonts.ready.then(alinea);
   tamano();lente(0);
-  if(reducido){for(var t=0;t<300;t++)band.paso();sombra.style.background='radial-gradient(60% 60% at 50% 50%,rgba(6,11,24,.4),rgba(6,11,24,.85))';band.dibuja(ctx,L[0].p)}
+  if(reducido){for(var t=0;t<300;t++)band.paso();band.dibuja(ctx,L[0].p,L[0].voz,1)}
   else requestAnimationFrame(bucle);
 })();
 </script>
