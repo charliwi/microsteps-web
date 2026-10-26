@@ -238,37 +238,43 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     if(a>=2*N){ab-=N;a-=N;mueve(ab,false)}
     ab=a;mueve(a,true);
   }
-  // sonido: muy suave, sólo después de tocar. Un tono que respira con la bandada y notas pequeñas cuando una señal pasa
+  // sonido: un piano que respira. Un acorde lento entra y sale cada ~8 s, en loop; cada lente cambia el acorde.
+  // Notas sueltas, muy quedas, cuando una señal pasa de punto en punto.
   var sonido=(function(){
-    var ac=null,maestro,filtro,dron=[],eco,ultima=0,raiz=110,escala=[0,2,4,7,9],activo=false;
-    var RAIZ={susurro:110,masa:98,tu:123.47,voz:130.81,red:87.31,vectores:146.83,turno:103.83};
-    var ESCALA={susurro:[0,2,4,7,9],masa:[0,2,5,7,9],tu:[0,3,5,7,10],voz:[0,2,4,7,11],red:[0,3,5,7,8],vectores:[0,2,4,6,9],turno:[0,2,5,7,10]};
+    var ac=null,maestro,salida,activo=false,raiz=220,acorde=[0,4,7,11],reloj=null,ultima=0,paso=0;
+    var RAIZ={susurro:220,masa:196,tu:246.94,voz:261.63,red:174.61,vectores:293.66,turno:207.65};
+    var ACORDE={susurro:[0,7,11,14],masa:[0,5,9,14],tu:[0,3,7,10],voz:[0,4,7,11],red:[0,3,7,8],vectores:[0,4,9,14],turno:[0,5,7,10]};
     function arranca(){
       ac=new (window.AudioContext||window.webkitAudioContext)();
-      maestro=ac.createGain();maestro.gain.value=0;filtro=ac.createBiquadFilter();filtro.type='lowpass';filtro.frequency.value=900;
-      eco=ac.createConvolver();var largo=ac.sampleRate*3,b=ac.createBuffer(2,largo,ac.sampleRate);
-      for(var c=0;c<2;c++){var d=b.getChannelData(c);for(var i=0;i<largo;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/largo,3)}
-      eco.buffer=b;var seco=ac.createGain();seco.gain.value=.6;var mojado=ac.createGain();mojado.gain.value=.5;
-      filtro.connect(seco);seco.connect(maestro);filtro.connect(eco);eco.connect(mojado);mojado.connect(maestro);maestro.connect(ac.destination);
-      [1,1.5,2.003].forEach(function(m,q){var o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=raiz*m;g.gain.value=q?0.12:0.22;o.connect(g);g.connect(filtro);o.start();dron.push({o:o,g:g,m:m})});
-      maestro.gain.setTargetAtTime(.055,ac.currentTime,2.5);activo=true;
+      maestro=ac.createGain();maestro.gain.value=0;
+      var filtro=ac.createBiquadFilter();filtro.type='lowpass';filtro.frequency.value=2400;
+      // sala suave: eco corto que se desvanece
+      var sala=ac.createConvolver(),largo=ac.sampleRate*2.6,b=ac.createBuffer(2,largo,ac.sampleRate);
+      for(var c=0;c<2;c++){var d=b.getChannelData(c);for(var k=0;k<largo;k++)d[k]=(Math.random()*2-1)*Math.pow(1-k/largo,4)*.5}
+      sala.buffer=b;var seco=ac.createGain();seco.gain.value=.75;var mojado=ac.createGain();mojado.gain.value=.35;
+      salida=filtro;filtro.connect(seco);seco.connect(maestro);filtro.connect(sala);sala.connect(mojado);mojado.connect(maestro);maestro.connect(ac.destination);
+      maestro.gain.setTargetAtTime(.5,ac.currentTime,1.5);activo=true;respira();reloj=setInterval(respira,8000);
     }
-    function nota(alto){
-      if(!activo||ac.currentTime-ultima<.35)return;ultima=ac.currentTime;
-      var g=ac.createGain(),o=ac.createOscillator(),grado=escala[(Math.random()*escala.length)|0],oct=alto>.5?4:2;
-      o.type='triangle';o.frequency.value=raiz*oct*Math.pow(2,grado/12);
-      g.gain.setValueAtTime(0,ac.currentTime);g.gain.linearRampToValueAtTime(.09,ac.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+2.6);
-      o.connect(g);g.connect(filtro);o.start();o.stop(ac.currentTime+2.8);
+    // una nota de piano: ataque corto y caída larga, con un poco de armónicos
+    function tecla(f,cuando,vol,dura){
+      var t=ac.currentTime+(cuando||0),g=ac.createGain();g.connect(salida);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.012);g.gain.exponentialRampToValueAtTime(vol*.35,t+.6);g.gain.exponentialRampToValueAtTime(.0001,t+dura);
+      [[1,1],[2,.28],[3,.08]].forEach(function(a){var o=ac.createOscillator(),h=ac.createGain();o.type='sine';o.frequency.value=f*a[0];h.gain.value=a[1];o.connect(h);h.connect(g);o.start(t);o.stop(t+dura+.1)});
+    }
+    function nota(g,oct){return raiz*oct*Math.pow(2,g/12)}
+    // inhala: el acorde sube nota a nota; exhala: se deja sonar
+    function respira(){
+      if(!activo)return;paso++;
+      tecla(nota(acorde[0],.5),0,.05,7);
+      acorde.forEach(function(g,q){tecla(nota(g,1),.35+q*.42,.032,6.5)});
+      if(paso%2===0)tecla(nota(acorde[(paso/2)%acorde.length],2),4.2,.018,4);
     }
     return {
       toca:function(){if(!ac)arranca();else if(ac.state==='suspended')ac.resume()},
-      apaga:function(){if(!ac)return;activo=!activo;maestro.gain.setTargetAtTime(activo?.055:0,ac.currentTime,.6);return activo},
-      lente:function(l){raiz=RAIZ[l.voz]||110;escala=ESCALA[l.voz]||escala;if(!ac)return;dron.forEach(function(d){d.o.frequency.setTargetAtTime(raiz*d.m,ac.currentTime,2.5)})},
+      apaga:function(){if(!ac)return;activo=!activo;maestro.gain.setTargetAtTime(activo?.5:0,ac.currentTime,.8);return activo},
+      lente:function(l){raiz=RAIZ[l.voz]||220;acorde=ACORDE[l.voz]||acorde},
       cuadro:function(b){if(!activo)return;
-        // respira con la apertura de la bandada
-        var r=.5+.5*Math.sin(performance.now()/4200);dron[0].g.gain.setTargetAtTime(.16+.1*r,ac.currentTime,.5);
-        if(b.disparo){b.disparo=false;nota(b.oy/b.h<.5?1:0)}
-        else if(Math.random()<.004)nota(Math.random());
+        if(b.disparo){b.disparo=false;if(ac.currentTime-ultima>1.2){ultima=ac.currentTime;tecla(nota(acorde[(Math.random()*acorde.length)|0],2),0,.014,3)}}
       },
       encendido:function(){return activo},
       iniciado:function(){return !!ac}
