@@ -10,4 +10,6 @@ A single page that tells a story: a question, the murmuration (each point follow
 - Diseño / Design: iwi.
 - Fuentes / Sources: Reynolds, 1987 (SIGGRAPH); Ballerini et al., 2008 (PNAS 105:1232); Simard et al., 1997 (Nature 388); J. C. Bose, *The Nervous Mechanism of Plants*, 1926; C. G. Jung, *The Archetypes and the Collective Unconscious*; Beggs & Plenz, 2003 (Journal of Neuroscience 23(35)); Isha Upanishad, v. 6; Mitákuye Oyás’iŋ (Lakota); Jacobo Grinberg, teoría sintérgica / syntergic theory (UNAM); Dresden Codex, Venus table; Mech, 1999 (Canadian Journal of Zoology 77:1196).
 
+Instagram: [@micro_______steps](https://www.instagram.com/micro_______steps/)
+
 GitHub Pages desde `main`; `CNAME` → microsteps.mx.
