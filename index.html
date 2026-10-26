@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>microsteps · murmurar</title>
-<meta name="description" content="Algo se está murmurando. Compartimos ciencia desde México. Small steps, deep changes.">
-<meta property="og:title" content="microsteps · Algo se está murmurando">
-<meta property="og:description" content="Compartimos ciencia desde México: un tema, varios lentes.">
-<meta property="og:image" content="https://microsteps.mx/og.jpg?v=2">
-<meta property="og:image:secure_url" content="https://microsteps.mx/og.jpg?v=2">
+<title>microsteps · murmurar / murmuration</title>
+<meta name="description" content="Algo se está murmurando. Compartimos ciencia desde México. · Something is murmuring. Sharing science from Mexico. Small steps, deep changes.">
+<meta property="og:title" content="microsteps · Algo se está murmurando · Something is murmuring">
+<meta property="og:description" content="Compartimos ciencia desde México: un tema, varios lentes. · Sharing science from Mexico: one topic, many lenses.">
+<meta property="og:image" content="https://microsteps.mx/og.jpg?v=3">
+<meta property="og:image:secure_url" content="https://microsteps.mx/og.jpg?v=3">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Algo se está murmurando: estrellas que dibujan la flor de Venus">
+<meta property="og:image:alt" content="Algo se está murmurando / Something is murmuring: estrellas que dibujan la flor de Venus">
 <meta property="og:site_name" content="microsteps">
 <meta property="og:locale" content="es_MX">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:url" content="https://microsteps.mx/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://microsteps.mx/og.jpg?v=2">
+<meta name="twitter:image" content="https://microsteps.mx/og.jpg?v=3">
 <meta name="theme-color" content="#060B18">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23060B18'/%3E%3Cg fill='%23A9C46A'%3E%3Ccircle cx='9' cy='14' r='1.6'/%3E%3Ccircle cx='14' cy='11' r='1.6'/%3E%3Ccircle cx='19' cy='13' r='1.6'/%3E%3Ccircle cx='23' cy='17' r='1.6'/%3E%3Ccircle cx='13' cy='18' r='1.6'/%3E%3Ccircle cx='18' cy='20' r='1.6'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -155,6 +155,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   function ponIdioma(i){idioma=i;try{localStorage.setItem('ms-idioma',i)}catch(e){}
     document.documentElement.lang=i;document.getElementById('lema-sub').textContent=i==='en'?'sharing science from Mexico':'compartimos ciencia desde México';
     document.getElementById('credito-txt').textContent=i==='en'?'design:':'diseño:';
+    document.querySelector('.idioma').setAttribute('aria-label',i==='en'?'Language':'Idioma');if(typeof pinta==='function'&&window._pintaLista)pinta();
     [].forEach.call(document.querySelectorAll('.idioma button'),function(b){b.classList.toggle('on',b.dataset.i===i)});
     if(actual>=0){frase.classList.add('fuera');setTimeout(function(){pintaTexto(actual);frase.classList.remove('fuera')},700);
       var l=L[actual];rueda.cambia((l.mira===LENTES?['10,000 lentes']:(l.mira.length?l.mira.slice():['microsteps'])).map(nombre))}}
@@ -349,8 +350,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
       iniciado:function(){return !!ac}
     };
   })();
-  var boton=document.getElementById('sonido');
-  function pinta(){var on=sonido.encendido();boton.classList.toggle('apagado',!on);boton.setAttribute('aria-label',on?'Apagar sonido':'Encender sonido')}
+  var boton=document.getElementById('sonido');window._pintaLista=1;
+  function pinta(){var on=sonido.encendido(),en=idioma==='en';boton.classList.toggle('apagado',!on);boton.setAttribute('aria-label',on?(en?'Turn sound off':'Apagar sonido'):(en?'Turn sound on':'Encender sonido'))}
   boton.addEventListener('click',function(e){e.stopPropagation();if(!sonido.iniciado())sonido.toca();else sonido.apaga();pinta()});
   [].forEach.call(document.querySelectorAll('.idioma button'),function(b){b.addEventListener('click',function(e){e.stopPropagation();ponIdioma(b.dataset.i)})});
   escena.addEventListener('click',function(){if(!sonido.iniciado()){sonido.toca();pinta()}lente(siguiente())});
