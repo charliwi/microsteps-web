@@ -51,11 +51,12 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 /* abajo a la izquierda: la rueda de lentes (como el selector de la alarma), una línea y el lema */
 .pieizq{width:max-content;position:absolute;left:max(24px,env(safe-area-inset-left,0px));bottom:max(40px,env(safe-area-inset-bottom,0px))}
 .pieizq .lema{position:static;display:block;padding-top:12px}
-.pieizq .linea+.rueda+.linea{margin-top:18px;margin-bottom:0}
+.pieizq .linea+.rueda+.linea{margin:0 0 0 1.5px}
 /* las líneas arrancan donde arranca la tinta de las letras (Helvetica y Courier dejan ~1.5 px de aire a la izquierda) */
-.linea{display:block;border-top:1px solid rgba(238,242,248,.45);margin:0 0 4px 1.5px}
-.rueda{height:108px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 22%,#000 55%,transparent);mask-image:linear-gradient(transparent,#000 22%,#000 55%,transparent)}
-.pista{transition:transform 1.1s cubic-bezier(.22,.8,.2,1)}
+.linea{display:block;border-top:1px solid rgba(238,242,248,.45);margin:0 0 0 1.5px}
+/* la rueda: cinco renglones; el del centro es el iluminado, arriba y abajo se desvanecen igual */
+.rueda{height:130px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent)}
+.pista{transition:transform 1.4s cubic-bezier(.45,0,.25,1)}
 .pista div{margin-left:-.06em;height:26px;line-height:26px;font-family:"Courier Prime","Courier New",ui-monospace,monospace;font-size:22px;color:rgba(255,255,255,.35);transition:color 1.1s ease;white-space:nowrap}
 .pista div.on{color:#fff}
 .sonido{position:absolute;top:max(22px,env(safe-area-inset-top,0px));right:max(20px,env(safe-area-inset-right,0px));background:none;border:0;padding:4px;color:rgba(255,255,255,.8);cursor:pointer;line-height:0}
@@ -69,7 +70,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 .frase .fuente{font-family:"Courier Prime","Courier New",ui-monospace,monospace;font-size:11px;letter-spacing:.04em;text-transform:none;margin-top:16px;font-size:13px;color:rgba(255,255,255,.88)}
 .frase p.sub{max-width:520px;margin-left:auto;margin-right:auto}
 /* los lentes que miran cada diapositiva se encienden */
-@media (max-width:760px){.lema{font-size:26px!important}.rueda{height:92px}.pista div{height:22px;line-height:22px;font-size:18px}
+@media (max-width:760px){.lema{font-size:26px!important}.rueda{height:110px}.pista div{height:22px;line-height:22px;font-size:18px}
   .frase h1{font-size:34px}.frase p{font-size:15px}}
 @media (prefers-reduced-motion:reduce){.fondo i,.tinte,.frase>*{transition:opacity .3s}}
 </style>
@@ -110,7 +111,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     {lente:'el lente de la masculinidad', tit:'Ni alfa ni beta. <b>En la parvada nadie manda.</b>', sub:'El «lobo alfa» salió de lobos en cautiverio. En libertad, la manada es una familia.', fuente:'Mech, 1999 · Canadian Journal of Zoology', mira:['masculinidad','ciencia'], foto:'drive-6525', voz:'turno', forma:'libre', to:.35, tinte:'#2A3A50', f:['#070B12','#1B2633'], p:['#B8C4D4','#FFFFFF']},
     {lente:'microsteps', tit:'Todos estamos <b>murmurando.</b>', sub:'Un tema, varios lentes. En cada uno decimos qué es dato y qué es visión. Murmura con nosotros.', mira:LENTES, foto:'drive-6524', voz:'masa', forma:'libre', to:.2, tinte:'#1F5A2A', f:['#03100A','#123A1E'], p:['#A9C46A','#E6F8C8']}
   ];
-  function siguiente(){return (actual+1)%L.length}
+  // al terminar regresa a la pregunta, no a la invitación: la vuelta es continua
+  function siguiente(){return actual+1<L.length?actual+1:1}
   var DUR=9000;
   function azar(s){s=s>>>0||1;return function(){s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)%100000)/100000}}
   // Bandada sin estelas. Tres grupos que se separan y se vuelven a juntar; cada punto con su profundidad (z).
@@ -236,17 +238,19 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
     var RITMO=2200,cola=['microsteps'],qi=0,a=0;
     function sig(){var n=cola[qi%cola.length];qi++;return n}
     function nuevo(n){var d=document.createElement('div');d.textContent=n;pista.appendChild(d);return d}
-    function pon(suave){var h=pista.firstChild.offsetHeight;if(!suave)pista.style.transition='none';pista.style.transform='translateY('+((1-a)*h)+'px)';if(!suave){pista.offsetHeight;pista.style.transition=''}
+    function pon(suave){var h=pista.firstChild.offsetHeight;if(!suave)pista.style.transition='none';pista.style.transform='translateY('+((2-a)*h)+'px)';if(!suave){pista.offsetHeight;pista.style.transition=''}
       [].forEach.call(pista.children,function(c,i){c.classList.toggle('on',i===a)})}
-    function llena(){while(pista.children.length<a+3)nuevo(sig())}
+    function llena(){while(pista.children.length<a+4)nuevo(sig())}
+    // primero se quita lo de arriba sin moverse (no se ve) y en el siguiente cuadro sube un renglón suave: nunca brinca
     function paso(){
-      a++;llena();pon(true);
-      if(a>8){pista.removeChild(pista.firstChild);a--;pon(false)}
+      if(a>6){pista.removeChild(pista.firstChild);a--;pon(false)}
+      requestAnimationFrame(function(){a++;llena();pon(true)});
     }
-    nuevo('microsteps');llena();pon(false);setInterval(paso,RITMO);
+    for(var q=0;q<2;q++)nuevo('');nuevo('microsteps');a=2;llena();pon(false);setInterval(paso,RITMO);
     return {cambia:function(c){
       // lo que viene debajo se reescribe con los lentes nuevos; lo que ya pasó no se toca
-      cola=c;qi=0;while(pista.children.length>a+1)pista.removeChild(pista.lastChild);llena();
+      // el que ya se ve abajo se queda; los demás se reescriben con los lentes nuevos
+      cola=c;qi=0;while(pista.children.length>a+2)pista.removeChild(pista.lastChild);llena();
       [].forEach.call(pista.children,function(c,i){c.classList.toggle('on',i===a)});
     }};
   })();
