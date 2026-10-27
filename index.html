@@ -21,7 +21,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/charliwi/microsteps-web/main/og.jpg">
 <meta name="theme-color" content="#060B18">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23060B18'/%3E%3Cg fill='%23A9C46A'%3E%3Ccircle cx='9' cy='14' r='1.6'/%3E%3Ccircle cx='14' cy='11' r='1.6'/%3E%3Ccircle cx='19' cy='13' r='1.6'/%3E%3Ccircle cx='23' cy='17' r='1.6'/%3E%3Ccircle cx='13' cy='18' r='1.6'/%3E%3Ccircle cx='18' cy='20' r='1.6'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23060B18'/%3E%3Cg fill='%23A9C46A'%3E%3Ccircle cx='9' cy='14' r='1.6'/%3E%3Ccircle cx='14' cy='11' r='1.6'/%3E%3Ccircle cx='19' cy='13' r='1.6'/%3E%3Ccircle cx='23' cy='17' r='1.6'/%3E%3Ccircle cx='13' cy='18' r='1.6'/%3E%3Ccircle cx='18' cy='20' r='1.6'/%3E%3C/g%3E%3C/svg%3E"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://microsteps.mx/#org","name":"microsteps","url":"https://microsteps.mx/","slogan":"Small steps, deep changes.","description":"Compartimos ciencia desde México: un tema mirado con varios lentes, de la naturaleza y la ciencia a la psicología y las culturas. Sharing science from Mexico: one topic, many lenses.","areaServed":"MX","sameAs":["https://www.instagram.com/micro_______steps/"]},{"@type":"WebSite","@id":"https://microsteps.mx/#web","url":"https://microsteps.mx/","name":"microsteps · murmurar / murmuration","inLanguage":["es-MX","en"],"publisher":{"@id":"https://microsteps.mx/#org"}}]}</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 <!-- microsteps.mx · diseño iwi · 26 oct 2026 -->
@@ -358,20 +359,20 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   boton.addEventListener('click',function(e){e.stopPropagation();if(!sonido.iniciado())sonido.toca();else sonido.apaga();pinta()});
   [].forEach.call(document.querySelectorAll('.idioma button'),function(b){b.addEventListener('click',function(e){e.stopPropagation();ponIdioma(b.dataset.i)})});
   escena.addEventListener('click',function(){if(!sonido.iniciado()){sonido.toca();pinta()}lente(siguiente())});
-  var fx=0,fy=0,lx=.5,ly=.5;
+  var fx=0,fy=0,lx=.5,ly=.5,lento=0;
   function hexA(h,a){var n=parseInt(h.slice(1),16);return'rgba('+(n>>16)+','+(n>>8&255)+','+(n&255)+','+a+')'}
   function bucle(t){
     if(!fijo&&t-inicio>DUR)lente(siguiente());
     var l=L[actual];
-    band.paso();sonido.cuadro(band);
+    if(!reducido||(++lento%3===0))band.paso();sonido.cuadro(band);   // con movimiento reducido la bandada va a un tercio
     ctx.clearRect(0,0,band.w,band.h);
     if(antes&&mezcla<1){mezcla=Math.min(1,mezcla+.012);var e=mezcla*mezcla*(3-2*mezcla);band.dibuja(ctx,antes.p,antes.voz,1-e);band.dibuja(ctx,l.p,l.voz,e)}else band.dibuja(ctx,l.p,l.voz,1);
     var nx=band.ox/band.w,ny=band.oy/band.h;
     lx+=(nx-lx)*.006;ly+=(ny-ly)*.006;                     // la luz llega tarde
     fx+=((nx-.5)*-3-fx)*.01;fy+=((ny-.5)*-2.4-fy)*.01;      // el fondo se mueve poco y al revés
-    fondo.style.transform='translate('+fx.toFixed(3)+'%,'+fy.toFixed(3)+'%) scale(1.04)';
+    if(!reducido)fondo.style.transform='translate('+fx.toFixed(3)+'%,'+fy.toFixed(3)+'%) scale(1.04)';
     // un velo al centro para que la frase respire
-    luz.style.transform='translate3d('+((lx-.5)*55).toFixed(2)+'%,'+((ly-.5)*55).toFixed(2)+'%,0)';
+    if(!reducido)luz.style.transform='translate3d('+((lx-.5)*55).toFixed(2)+'%,'+((ly-.5)*55).toFixed(2)+'%,0)';
     requestAnimationFrame(bucle);
   }
   // la base de las letras redondas del logo está en 545 de 560 (viewBox): ahí va la base de «deep changes.»
@@ -381,8 +382,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   window.addEventListener('resize',function(){clearTimeout(window._t);window._t=setTimeout(function(){tamano();alinea();rueda.acomoda();},200)});
   alinea();if(document.fonts)document.fonts.ready.then(alinea);
   ponIdioma(idioma);tamano();lente(0);
-  if(reducido){for(var t=0;t<300;t++)band.paso();band.dibuja(ctx,L[0].p,L[0].voz,1)}
-  else requestAnimationFrame(bucle);
+  if(reducido)for(var t=0;t<300;t++)band.paso();
+  requestAnimationFrame(bucle);
 })();
 </script>
 </body>
