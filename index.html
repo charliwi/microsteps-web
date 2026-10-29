@@ -90,6 +90,24 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 @media (max-width:760px){.lema{font-size:26px!important}.rueda{height:110px}.pista div{height:22px;line-height:22px;font-size:18px}
   .frase h1{font-size:34px}.frase p{font-size:15px}}
 @media (prefers-reduced-motion:reduce){.fondo i,.tinte,.frase>*{transition:opacity .3s}}
+/*reticula*/
+:root{--m:36px;--g:24px;--n-col:12;--col:calc((min(100vw,1440px) - 2*var(--m) - 11*var(--g))/12)}
+@media (max-width:760px){:root{--m:18px;--g:12px;--n-col:4;--col:calc((100vw - 2*var(--m) - 3*var(--g))/4)}}
+.marca,.pieizq{left:max(var(--m),env(safe-area-inset-left,0px),calc((100vw - 1440px)/2 + var(--m)))!important}
+.credito,.sonido{right:max(var(--m),env(safe-area-inset-right,0px),calc((100vw - 1440px)/2 + var(--m)))!important}
+.sonido{margin-right:-4px}
+.ig{right:calc(max(var(--m),calc((100vw - 1440px)/2 + var(--m))) + 34px)!important}
+.idioma{right:calc(max(var(--m),calc((100vw - 1440px)/2 + var(--m))) + 72px)!important}
+.centro{padding-left:var(--m)!important;padding-right:var(--m)!important}
+.frase{max-width:calc(6*var(--col) + 5*var(--g))!important}
+/* eje horizontal: margen de 56 arriba y abajo (62 en móvil); la marca y los iconos se apoyan arriba, el lema abajo */
+:root{--mt:56px;--gv:24px;--nr:7}
+@media (max-width:760px){:root{--mt:62px;--gv:12px;--nr:8}}
+.marca{top:max(var(--mt),env(safe-area-inset-top,0px))!important}
+.sonido,.ig,.idioma{top:max(calc(var(--mt) - 4px),env(safe-area-inset-top,0px))!important}
+.pieizq{bottom:max(var(--mt),env(safe-area-inset-bottom,0px))!important}
+@media (max-width:760px){.frase{max-width:none!important}}
+/*/reticula*/
 </style>
 </head>
 <body>
