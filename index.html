@@ -107,6 +107,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 .sonido,.ig,.idioma{top:max(calc(var(--mt) - 4px),env(safe-area-inset-top,0px))!important}
 .pieizq{bottom:max(var(--mt),env(safe-area-inset-bottom,0px))!important}
 @media (max-width:760px){.frase{max-width:none!important}}
+/* en móvil el subtítulo va en dos renglones para no pasar debajo de ES · EN · IG · sonido (Carlos, 30 oct) */
+.marca small .corte{display:none}@media (max-width:760px){.marca small{line-height:1.3}.marca small .corte{display:inline}}
 /*/reticula*/
 </style>
 </head>
@@ -119,7 +121,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   <canvas id="cielo"></canvas>
   <div class="centro"><div class="frase fuera" id="frase"><div class="lente" id="lente"></div><h1 id="tit"></h1><p class="sub" id="sub"></p><div class="fuente" id="fuente"></div></div></div>
   <button class="sonido apagado" id="sonido" type="button" aria-label="Encender sonido"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><g class="ondas"><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/><path d="M18 7.5a6.5 6.5 0 0 1 0 9"/></g><path class="tache" d="M15 9l5 6M20 9l-5 6"/></svg></button>
-  <span class="marca">microsteps<small id="lema-sub">compartimos ciencia desde México</small></span>
+  <span class="marca">microsteps<small id="lema-sub">compartimos ciencia <br class="corte">desde México</small></span>
   <a class="ig" href="https://www.instagram.com/micro_______steps/" target="_blank" rel="noopener" aria-label="Instagram @micro_______steps"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor" stroke="none"/></svg></a>
   <div class="idioma" aria-label="Idioma"><button type="button" data-i="es">ES</button><button type="button" data-i="en">EN</button></div>
   <div class="pieizq"><i class="linea"></i><div class="rueda" aria-hidden="true"><div class="pista" id="pista"></div></div><i class="linea"></i><span class="lema">Small changes.<b>Deep impact.<i class="base" id="base"></i></b></span></div>
@@ -175,7 +177,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   function pintaTexto(k){var l=tx(k);document.getElementById('lente').textContent=l.lente;document.getElementById('tit').innerHTML=l.tit;
     var s=document.getElementById('sub');s.textContent=l.sub;s.hidden=!l.sub;var fu=document.getElementById('fuente');fu.textContent=l.fuente||'';fu.hidden=!l.fuente}
   function ponIdioma(i){idioma=i;try{localStorage.setItem('ms-idioma',i)}catch(e){}
-    document.documentElement.lang=i;document.getElementById('lema-sub').textContent=i==='en'?'sharing science from Mexico':'compartimos ciencia desde México';
+    document.documentElement.lang=i;document.getElementById('lema-sub').innerHTML=i==='en'?'sharing science <br class="corte">from Mexico':'compartimos ciencia <br class="corte">desde México';
     document.getElementById('credito-txt').textContent=i==='en'?'design:':'diseño:';
     document.querySelector('.idioma').setAttribute('aria-label',i==='en'?'Language':'Idioma');if(typeof pinta==='function'&&window._pintaLista)pinta();
     [].forEach.call(document.querySelectorAll('.idioma button'),function(b){b.classList.toggle('on',b.dataset.i===i)});
